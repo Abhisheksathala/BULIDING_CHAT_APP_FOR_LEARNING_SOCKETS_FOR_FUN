@@ -76,6 +76,7 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: 'Password is required', success: false });
     }
     const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(identifier);
+
     const user = await UserModel.findOne(
       isEmail ? { email: identifier } : { username: identifier },
     ).select('+password');

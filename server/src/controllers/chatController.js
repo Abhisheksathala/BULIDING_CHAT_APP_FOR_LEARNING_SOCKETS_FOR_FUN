@@ -14,16 +14,12 @@ import { emitEvent, deletfilesfromclodinary } from '../utils/features.js';
  */
 export const newGroupChat = async (req, res) => {
   try {
-    // 1. Extract 'name' (group chat title) and 'members' array from the request body
     const { name, members } = req.body;
 
-    // 2. Validate the data: both must exist.
     if (!name || !members) {
-      // 400 = Bad Request: Missing required data
       return res.status(400).json({ message: 'Name and members are required', success: false });
     }
 
-    // 3. Enforce minimum of 2 members (excluding creator) to form a group chat.
     if (members.length < 2) {
       // Why 2? Because a meaningful group chat needs at least 3 people: 2 others + creator
       return res.status(400).json({
