@@ -109,8 +109,8 @@ export const getmychats = async (req, res) => {
       .populate('members', 'name avater username email');
 
     /*
-           For example, userId = 'user123'
-           MongoDB returns all Chat documents where 'members' includes 'user123'.
+            For example, userId = 'user123'
+            MongoDB returns all Chat documents where 'members' includes 'user123'.
         */
 
     // 4. Transform the chat objects to a minimal usable format for the client

@@ -35,8 +35,11 @@ chatRouter.post(
   newGroupChat,
 );
 chatRouter.get('/my-chats', isAuthenticated, getmychats);
+
 chatRouter.get('/my/my-groups', isAuthenticated, getmygroups);
+
 chatRouter.put('/add-member', addMeneberValidater(), validateHanlder, isAuthenticated, addmember);
+
 chatRouter.put(
   '/remove-member',
   RemovememberValidater(),
@@ -45,6 +48,7 @@ chatRouter.put(
   removemembers,
   Sendattachments,
 );
+
 chatRouter.delete('/leave-group/:id', LeavaeGroup(), validateHanlder, isAuthenticated, leavegroup);
 chatRouter.post(
   '/send-attachment',
@@ -54,11 +58,13 @@ chatRouter.post(
   isAuthenticated,
   sendattachment,
 );
+
 chatRouter
   .route('/chat-curd')
   .get(isAuthenticated, getchatdetails)
   .put(isAuthenticated, renamegroup)
   .delete(isAuthenticated, deletechatdetails);
+  
 
 chatRouter.get('/message/:id', getmessagevalidater(), validateHanlder, getmessages);
 
