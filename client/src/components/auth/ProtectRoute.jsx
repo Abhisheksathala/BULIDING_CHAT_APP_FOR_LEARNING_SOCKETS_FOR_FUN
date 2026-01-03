@@ -7,7 +7,13 @@ const ProtectRoute = ({ children, user, redirect = '/userauthentication/login' }
     return <Navigate to={redirect} />;
   }
 
-  return <div>{children ? children : <Outlet />}</div>;
+  return(
+
+    <div>
+    {children ? children : <Outlet />}
+    </div>
+
+    );
 };
 
 export default ProtectRoute;
