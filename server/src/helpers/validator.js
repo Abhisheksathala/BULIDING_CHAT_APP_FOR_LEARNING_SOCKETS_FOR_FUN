@@ -37,11 +37,14 @@ export const addMeneberValidater = () => [
     .isArray({ min: 2, max: 97 })
     .withMessage('memebers must be 2-100'),
 ];
+
 export const RemovememberValidater = () => [
   body('chatId', 'Plase enter chatId').notEmpty(),
   body('userIdToRemove', 'plase enter useridtoremove').notEmpty(),
 ];
+
 export const LeavaeGroup = () => [param('id', 'Plase enter id').notEmpty()];
+
 export const Sendattachments = () => [
   body('chatId', 'Plase enter chatId').notEmpty(),
   check('files')
@@ -51,10 +54,12 @@ export const Sendattachments = () => [
     .withMessage('memebers must be 1 - 5'),
   ,
 ];
+
 export const getmessagevalidater = () => [
   param('id', 'Plase enter chatId').notEmpty(),
   query('page', 'plase sned the page number').notEmpty(),
 ];
+
 export const ChatIdvalidater = () => [param('id', 'Plase enter chatId').notEmpty()];
 
 export const validateHanlder = (req, res, next) => {
