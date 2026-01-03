@@ -113,6 +113,7 @@ export const getUser = async (req, res) => {
     return res.status(500).json({ message: error.message, success: false });
   }
 };
+//
 export const logout = (req, res) => {
   try {
     const token = res.clearCookie('chattu-token', '', {
@@ -132,7 +133,6 @@ export const logout = (req, res) => {
   }
 };
 // search user by username
-
 export const searchUser = async (req, res) => {
   try {
     const { name } = req.body;
