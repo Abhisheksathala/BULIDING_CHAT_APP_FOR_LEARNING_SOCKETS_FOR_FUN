@@ -12,10 +12,15 @@ const requestSchema = new mongoose.Schema(
       ref: 'User',
       required: true,
     },
+    receiver:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    }
   },
   { timestamps: true },
 );
 
-const requestModel = mongoose.model('User', requestSchema);
+const requestModel = mongoose.model('request', requestSchema);
 
 export default requestModel;

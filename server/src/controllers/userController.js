@@ -5,6 +5,9 @@ import chatModel from '../models/chatModel.js';
 
 import { sendToken } from '../utils/sendtoken.js';
 
+import { emitEvent } from '../utils/features.js';
+import { NEW_REQUEST } from '../constants/events.js';
+
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;
 
 // Register user
@@ -178,20 +181,29 @@ export const searchUser = async (req, res) => {
 
 // send request
 export const sendFriendrequest = async (req, res) => {
-   try {
-
-    const {userId} = req.body
+  try {
+    const { userId } = req.body
 
     const request = await requestModel.findOne({
-
+      $or:[
+        {receiver:req.user,sender:userId},
+        {sender:userId,receiver:req.user}
+      ]
     })
-    if(request){
-      return res.status(403){
-        success:false,
-        code:" REQUEST EXIST",
-        message:"Request alredy send"
-      }
+    if (request) {
+      return res.status(403).json({
+        success: false,
+        code: " REQUEST EXIST",
+        message: "Request alredy send"
+      })
     }
+
+    await requestModel.create({
+      sender: req.user,
+      receiver:userId
+    })
+
+    emitEvent(req,NEW_REQUEST,[userId],"request")
 
 
     return res.status(200).json({ message: 'User logged out successfully', success: true });
@@ -201,7 +213,7 @@ export const sendFriendrequest = async (req, res) => {
   }
 };
 
+// accept request
 
-
-export const updateUser = (req, res) => {};
-export const deleteUser = (req, res) => {};
+export const updateUser = (req, res) => { };
+export const deleteUser = (req, res) => { };

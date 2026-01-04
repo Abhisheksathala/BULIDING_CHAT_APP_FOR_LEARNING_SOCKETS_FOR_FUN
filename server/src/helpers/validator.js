@@ -65,6 +65,9 @@ export const ChatIdvalidater = () => [param('id', 'Plase enter chatId').notEmpty
 
 export const sendrequestvalidater = () => [body('userId', 'Plase enter user ID').notEmpty()];
 
+export const acceptRequestValidator = ()=>[
+body('userId', 'Plase enter user ID').notEmpty()];
+
 export const validateHanlder = (req, res, next) => {
   const error = validationResult(req);
 
