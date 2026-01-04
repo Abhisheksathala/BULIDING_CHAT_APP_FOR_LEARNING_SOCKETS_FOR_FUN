@@ -64,7 +64,6 @@ chatRouter
   .get(isAuthenticated, getchatdetails)
   .put(isAuthenticated, renamegroup)
   .delete(isAuthenticated, deletechatdetails);
-  
 
 chatRouter.get('/message/:id', getmessagevalidater(), validateHanlder, getmessages);
 

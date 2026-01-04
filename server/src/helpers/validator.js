@@ -13,9 +13,10 @@ export const registrationValidater = () => [
 ];
 
 export const loginValidater = () => [
-  body('username', 'Please enter your username').notEmpty(),
+  body('identifier', 'Please enter email or username').notEmpty(),
   body('password', 'Please enter your password').notEmpty(),
 ];
+
 /*
 TODO:this is chat validator
 */
@@ -62,14 +63,21 @@ export const getmessagevalidater = () => [
 
 export const ChatIdvalidater = () => [param('id', 'Plase enter chatId').notEmpty()];
 
+export const sendrequestvalidater = () => [body('userId', 'Plase enter user ID').notEmpty()];
+
 export const validateHanlder = (req, res, next) => {
   const error = validationResult(req);
-  const errorMessage = error.array.map((error) => error.msg).join(', ');
+
   if (error.isEmpty()) {
     return next();
-  } else {
-    return res.status(400).json({
-      message: errorMessage,
-    });
   }
+
+  const errorMessage = error
+    .array()
+    .map((err) => err.msg)
+    .join(', ');
+
+  return res.status(400).json({
+    message: errorMessage,
+  });
 };

@@ -1,5 +1,7 @@
 import UserModel from '../models/userModel.js';
+import requestModel from '../models/requestModel.js';
 import bcrypt from 'bcrypt';
+import chatModel from '../models/chatModel.js';
 
 import { sendToken } from '../utils/sendtoken.js';
 
@@ -64,17 +66,14 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const { identifier, password } = req.body;
+
     if (!identifier || !password) {
-      return res
-        .status(400)
-        .json({ message: 'Email or username and password are required', success: false });
+      return res.status(400).json({
+        success: false,
+        message: 'Email/Username and password are required',
+      });
     }
-    if (!identifier) {
-      return res.status(400).json({ message: 'Email or username is required', success: false });
-    }
-    if (!password) {
-      return res.status(400).json({ message: 'Password is required', success: false });
-    }
+
     const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(identifier);
 
     const user = await UserModel.findOne(
@@ -82,18 +81,30 @@ export const login = async (req, res) => {
     ).select('+password');
 
     if (!user) {
-      return res.status(400).json({ message: 'user dont exist', success: false });
+      return res.status(400).json({
+        success: false,
+        message: 'User does not exist',
+      });
     }
+
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ message: 'Invalid  password', success: false });
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid password',
+      });
     }
+
     return sendToken(res, user, 200, 'User logged in successfully');
   } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: error.message, success: false });
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
+
 // Get user profile
 // Requires authentication
 export const getUser = async (req, res) => {
@@ -135,22 +146,62 @@ export const logout = (req, res) => {
 // search user by username
 export const searchUser = async (req, res) => {
   try {
-    const { name } = req.body;
+    const { name = '' } = req.query;
     if (!name) {
       return res.status(400).json({ message: 'name is required', success: false });
     }
-    const users = await UserModel.find({ name: { $regex: name, $options: 'i' } })
-      .select('-password')
-      .limit(1);
-    if (users.length === 0) {
+    const Mychat = await chatModel.find({ groupChat: false, members: req.user });
+
+    if (Mychat.length === 0) {
       return res.status(404).json({ message: 'No users found', success: false });
     }
-    return res.status(200).json({ success: true, users, message: 'Users found' });
+
+    const alluserFromMychat = Mychat.map((chat) => chat.members).flat();
+    // All users from my chats means friends or people i have chatted with
+    const allusersExceptmeAndFrined = await UserModel.find({
+      _id: { $nin: alluserFromMychat.concat(req.user) },
+      name: { $regex: name, $options: 'i' },
+    });
+
+    const users = allusersExceptmeAndFrined.map(({ _id, name, avater }) => ({
+      _id,
+      name,
+      avater: avater.url,
+    }));
+
+    return res.status(200).json({ success: true, users, message: 'successfull' });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: error.message, success: false });
   }
 };
+
+// send request
+export const sendFriendrequest = async (req, res) => {
+   try {
+
+    const {userId} = req.body
+
+    const request = await requestModel.findOne({
+
+    })
+    if(request){
+      return res.status(403){
+        success:false,
+        code:" REQUEST EXIST",
+        message:"Request alredy send"
+      }
+    }
+
+
+    return res.status(200).json({ message: 'User logged out successfully', success: true });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: error.message, success: false });
+  }
+};
+
+
 
 export const updateUser = (req, res) => {};
 export const deleteUser = (req, res) => {};
