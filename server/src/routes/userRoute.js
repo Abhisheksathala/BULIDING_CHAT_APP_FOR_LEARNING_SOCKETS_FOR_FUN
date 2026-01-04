@@ -8,7 +8,7 @@ import {
   logout,
   deleteUser,
   searchUser,
-  sendFriendrequest
+  sendFriendrequest,acceptFriendrequest,getallnotification
 } from '../controllers/userController.js';
 import { singleAvater } from '../middlewares/multer.js';
 import { isAuthenticated } from '../middlewares/auth.js';
@@ -25,7 +25,8 @@ userRouter.get('/getuser', isAuthenticated, getUser);
 userRouter.post('/searchuser', isAuthenticated, searchUser);
 userRouter.get('/searchuser', isAuthenticated, searchUser);
 userRouter.put("/sendrequest",sendrequestvalidater(),validateHanlder,isAuthenticated,sendFriendrequest)
-userRouter.put("/accept-request",acceptRequestValidator(),validateHanlder,isAuthenticated,sendFriendrequest)
+userRouter.put("/accept-request",acceptRequestValidator(),validateHanlder,isAuthenticated,acceptFriendrequest)
+userRouter.get("/get-request",isAuthenticated,getallnotification)
 
 
 // Protected routes

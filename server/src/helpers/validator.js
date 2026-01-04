@@ -66,7 +66,9 @@ export const ChatIdvalidater = () => [param('id', 'Plase enter chatId').notEmpty
 export const sendrequestvalidater = () => [body('userId', 'Plase enter user ID').notEmpty()];
 
 export const acceptRequestValidator = ()=>[
-body('userId', 'Plase enter user ID').notEmpty()];
+body('requestId', 'Plase enter request ID').notEmpty(),
+body("accept","please add accept").notEmpty().withMessage("please add accept").isBoolean().withMessage("accept must be a boolean")
+];
 
 export const validateHanlder = (req, res, next) => {
   const error = validationResult(req);
