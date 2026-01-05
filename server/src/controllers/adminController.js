@@ -73,8 +73,10 @@ export const adminlogout = async (req, res) => {
   }
 };
 
-export const getadminData = async (params) => {
-
+export const getadminData = async (req,res,next) => {
+return res.status(200).json({
+  admin:true
+})
 }
 
 export const allusers = async (req, res) => {

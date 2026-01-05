@@ -17,9 +17,15 @@ export const register = async (req, res) => {
   try {
     const { name, username, email, password, bio } = req.body;
 
+    const file = req.file;
+
+
+
     if (!name || !username || !email || !password) {
       return res.status(400).json({ message: 'All fields are required', success: false });
     }
+
+    if(!file) throw new Error("plz upload an avater")
 
     const avater = {
       public_id: 'ffsdfdsfs' || '',

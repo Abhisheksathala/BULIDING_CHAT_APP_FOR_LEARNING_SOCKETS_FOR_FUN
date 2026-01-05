@@ -9,7 +9,7 @@ export const registrationValidater = () => [
   body('username', 'Please enter your username').notEmpty(),
   body('password', 'Please enter your password').notEmpty(),
   body('bio', 'Please enter your bio').notEmpty(),
-  check('avatar').notEmpty().withMessage('Please add an avatar 🥲'),
+  // check('avatar').notEmpty().withMessage('Please add an avatar 🥲'),
 ];
 
 export const loginValidater = () => [
@@ -48,12 +48,11 @@ export const LeavaeGroup = () => [param('id', 'Plase enter id').notEmpty()];
 
 export const Sendattachments = () => [
   body('chatId', 'Plase enter chatId').notEmpty(),
-  check('files')
-    .notEmpty()
-    .withMessage('Please add an attachments be kind bro🥲')
-    .isArray({ min: 1, max: 5 })
-    .withMessage('memebers must be 1 - 5'),
-  ,
+  // check('files')
+  //   .notEmpty()
+  //   .withMessage('Please add an attachments be kind bro🥲')
+  //   .isArray({ min: 1, max: 5 })
+  //   .withMessage('memebers must be 1 - 5'),
 ];
 
 export const getmessagevalidater = () => [

@@ -445,9 +445,19 @@ export const sendattachment = async (req, res) => {
     const { chatId } = req.body;
     const userId = req.user;
 
+  // 4. Get files uploaded (from multer or similar)
+    const files = req.files || [];
+
+
+    if(files.length < 1) return res.status(400).json({success:false,message:"please upload attachments"})
+
+// here we need add only 5 files he can send thast it
+
     // 2. Validate inputs
     if (!chatId) return res.status(400).json({ message: 'Chat id is required', success: false });
     if (!userId) return res.status(401).json({ message: 'User not authenticated', success: false });
+
+
 
     // 3. Find chat and user data
     const chat = await chatModel.findById(chatId);
@@ -456,8 +466,7 @@ export const sendattachment = async (req, res) => {
     const user = await UserModel.findById(userId).select('name');
     if (!user) return res.status(404).json({ message: 'User not found', success: false });
 
-    // 4. Get files uploaded (from multer or similar)
-    const files = req.files || [];
+
 
     // 5. Check if any files were uploaded
     if (files.length < 1) {
