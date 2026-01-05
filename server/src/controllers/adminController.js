@@ -1,5 +1,6 @@
 import userModel from "../models/userModel.js"
 import ChatModel from "../models/chatModel.js"
+import messageModel from "../models/messageModel.js";
 
 
 
@@ -38,23 +39,52 @@ export const allusers = async (req, res) => {
   }
 };
 
-export const allChats = async (req,res) => {
+export const allChats = async (req, res) => {
 
   try {
 
-    const chats = await ChatModel.find({}).populate("members", "name avater").populate("creator","name avatar")
+    const chats = await ChatModel.find({}).populate("members", "name avater").populate("creator", "name avater")
 
-    const transformChat = await Promise.all(chats.map(async({members,_id,groupChat,name,creator})=>{
+    const transformChat = await Promise.all(chats.map(async ({ members, _id, groupChat, name, creator }) => {
 
-      return{
-        _id,groupChat,name,avater:members.slice(0,3).map((member)=>member.avater.url)
+      const totalMessages = await messageModel.countDocuments({
+        chat: _id
+      });
+
+      return {
+        _id, groupChat, name, avater: members.slice(0, 3).map((member) => member.avater.url),
+        members: members.map(({ _id, name, avater }) => {
+          return {
+            _id,
+            name,
+            avater: avater.url
+          }
+        }),
+        creator: {
+          // _id:creator._id,
+          name: creator.name || "none",
+          avater: creator.avater.url || ""
+        },
+        totalMembers: members.length,
       }
     }))
 
-  } catch (error) {
-console.log(error)
+     return res.status(500).json({
+      success: true,
+      message: "succefuly got",
+      chats:transformChat
+    });
+
+  } catch(error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 
 }
 
 
+export const allmessages = async (req,res)=>
+  
