@@ -38,6 +38,24 @@ export const allusers = async (req, res) => {
   }
 };
 
-export const allChats = ""
+export const allChats = async (req,res) => {
 
-5.20
+  try {
+
+    const chats = await ChatModel.find({}).populate("members", "name avater").populate("creator","name avatar")
+
+    const transformChat = await Promise.all(chats.map(async({members,_id,groupChat,name,creator})=>{
+      try {
+
+      } catch (error) {
+
+      }
+    }))
+
+  } catch (error) {
+console.log(error)
+  }
+
+}
+
+
