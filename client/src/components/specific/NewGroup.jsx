@@ -11,7 +11,7 @@ const NewGroup = () => {
           sm: '2rem',
         }}
         sx={{
-          width: { xs: '22rem', sm: '32rem' }, // ⬅️ made it wider
+          width: { xs: '22rem', sm: '32rem' },
         }}
       >
         <DialogTitle>Notifications</DialogTitle>
