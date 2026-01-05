@@ -1,17 +1,20 @@
 import express from 'express';
 import { isAuthenticated } from '../middlewares/auth.js';
-import { allusers } from '../controllers/adminController.js';
+import { allusers,allChats,allmessages ,getDashboardStats,adminLogin,adminlogout,getadminData} from '../controllers/adminController.js';
+import { adminLoginValidator ,validateHanlder} from '../helpers/validator.js';
+import {adminOnly} from "../middlewares/auth.js"
 
 const AdminRouter = express.Router();
 
-
-// AdminRouter.get("/")
-// AdminRouter.post("/verify")
-// AdminRouter.post("/logout")
+AdminRouter.use(adminOnly)
+// AdminRouter.get("/",getadminData)
+AdminRouter.post("/verify",adminLoginValidator(),validateHanlder,adminLogin)
+AdminRouter.post("/logout",adminlogout)
+//  only admin
 AdminRouter.get("/users",allusers)
-// AdminRouter.get("/chats")
-// AdminRouter.get("/messages")
-// AdminRouter.get("/stats")
+AdminRouter.get("/chats",allChats)
+AdminRouter.get("/messages",allmessages)
+AdminRouter.get("/stats",getDashboardStats)
 
 
 

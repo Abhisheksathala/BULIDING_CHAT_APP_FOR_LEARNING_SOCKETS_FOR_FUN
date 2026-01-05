@@ -311,19 +311,13 @@ export const getMyFriends = async (req, res) => {
       const chat = await chatModel.findById(chatId);
       const availableFriends = friends.filter((friend) => !chat.memebers.includes(friend._id));
 
-       return res.status(200).json({
-      success:true,
-      friends:availableFriends
-    })
-
-    }else{
-return res.status(200).json({
-
-})
+      return res.status(200).json({
+        success: true,
+        friends: availableFriends,
+      });
+    } else {
+      return res.status(200).json({});
     }
-
-
-
   } catch (error) {}
 };
 

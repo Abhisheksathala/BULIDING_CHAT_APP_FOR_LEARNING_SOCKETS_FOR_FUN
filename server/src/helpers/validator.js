@@ -70,6 +70,12 @@ body('requestId', 'Plase enter request ID').notEmpty(),
 body("accept","please add accept").notEmpty().withMessage("please add accept").isBoolean().withMessage("accept must be a boolean")
 ];
 
+
+export const adminLoginValidator = ()=>[
+  body("secretKey","plz enter secratekey").notEmpty()
+]
+
+
 export const validateHanlder = (req, res, next) => {
   const error = validationResult(req);
 
