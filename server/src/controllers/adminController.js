@@ -45,10 +45,9 @@ export const allChats = async (req,res) => {
     const chats = await ChatModel.find({}).populate("members", "name avater").populate("creator","name avatar")
 
     const transformChat = await Promise.all(chats.map(async({members,_id,groupChat,name,creator})=>{
-      try {
 
-      } catch (error) {
-
+      return{
+        _id,groupChat,name,avater:members.slice(0,3).map((member)=>member.avater.url)
       }
     }))
 
