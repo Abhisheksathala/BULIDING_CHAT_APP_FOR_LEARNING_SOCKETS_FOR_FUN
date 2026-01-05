@@ -29,6 +29,8 @@ userRouter.put("/accept-request",acceptRequestValidator(),validateHanlder,isAuth
 userRouter.get("/get-request",isAuthenticated,getallnotification)
 
 
+
+
 // Protected routes
 // userRouter.put('/updateuser', isAuthenticated, updateUser);
 // userRouter.delete('/deleteuser', isAuthenticated, deleteUser);

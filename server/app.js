@@ -12,6 +12,7 @@ import { createUser } from './src/seeders/seeders.js';
 // import routes
 import userRouter from './src/routes/userRoute.js';
 import chatRouter from './src/routes/chatRoute.js';
+import AdminRouter from './src/routes/admin.js';
 
 const app = express();
 
@@ -42,5 +43,6 @@ app.use(globalErrorhandler);
 // routes
 app.use('/api/v1/user', userRouter);
 app.use('/api/v1/chat', chatRouter);
+app.use('/api/v1/admin', AdminRouter);
 
 export default app;
