@@ -1,5 +1,5 @@
 // Import event constants and essential modules
-import { ALERT, REFEATCH_CHATS, NEW_MESSAGE, NEW_ATTACHMENT } from '../constants/events.js';
+import { ALERT, REFEATCH_CHATS, NEW_MESSAGE_ALERT, NEW_ATTACHMENT } from '../constants/events.js';
 // Helper to find the "other member" in one-to-one chats
 import { getothermember } from '../helpers/Hpelerchat.js';
 // Mongoose models for chats, users, and messages
@@ -514,7 +514,7 @@ export const sendattachment = async (req, res) => {
     });
 
     // 11. Also emit new message event (might be redundant)
-    emitEvent(req, NEW_MESSAGE, chat.members, {
+    emitEvent(req, NEW_MESSAGE_ALERT, chat.members, {
       message: messageForDB,
       chatId,
     });

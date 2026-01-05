@@ -1,4 +1,5 @@
-import app from './app.js';
+import app  from './app.js';
+import {server} from "./app.js"
 import connectDB from './src/database/Database.js';
 
 const PORT = process.env.PORT || 3000;
@@ -8,7 +9,7 @@ connectDB()
     app.get('/', (req, res) => {
       res.send('hello');
     });
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
       console.log('listening on port ' + PORT);
     });
   })
