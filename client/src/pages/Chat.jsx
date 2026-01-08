@@ -4,8 +4,8 @@ import { Box, Typography, Stack, IconButton } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import { AttachFile, Send } from '@mui/icons-material';
 
-// 
-import InputBox from "../"
+//
+import {InputBox} from "../components/styles/InputBox"
 
 const Chat = () => {
   const ContainerRef = React.useRef(null);
