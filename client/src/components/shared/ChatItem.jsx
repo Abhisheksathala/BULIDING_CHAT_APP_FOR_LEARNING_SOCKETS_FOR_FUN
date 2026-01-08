@@ -25,7 +25,7 @@ const ChatItem = ({
         <div
           className={`flex items-center p-4   transition-colors ease-in-out duration-300 border-b-2 border-gray-300 justify-start gap-4 relative ${
             sameSender
-              ? 'bg-black text-white transition-colors  duration-300 ease-in-out  hover:bg-gray-800'
+              ? 'bg-blue-600 text-white transition-colors  duration-300 ease-in-out  hover:bg-blue-700'
               : 'bg-white hover:bg-gray-100  text-black transition-colors duration-300 ease-in-out '
           }`}
         >

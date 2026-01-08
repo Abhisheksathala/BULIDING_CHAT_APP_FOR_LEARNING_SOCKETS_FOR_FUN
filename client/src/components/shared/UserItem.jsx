@@ -1,42 +1,63 @@
 import React, { memo } from 'react';
 import {
-  Dialog,
   Stack,
-  DialogTitle,
-  List,
-  ListItemText,
   ListItem,
   Typography,
   IconButton,
   Avatar,
 } from '@mui/material';
+import { Add, Remove } from '@mui/icons-material';
 
-import AvaterCard from '../shared/AvaterCard';
-import { Add } from '@mui/icons-material';
+const UserItem = ({ user, handler, handlerIsLoading , isAdded = false}) => {
 
-const UserItem = ({ user, handler, handlerIsLoading }) => {
-  const { name, _id, avater } = user;
+  // , isAdded = false
+
+  const { name, _id ,avater } = user;
+
   return (
-    <ListItem>
-      <Stack direction={'row'} alignItems={'center'} spacing={'1rem'}>
+    <ListItem disablePadding>
+      <Stack
+        direction="row"
+        alignItems="center"
+        spacing={2}
+        sx={{ width: '100%' }}
+      >
         <Avatar />
+
+        {/* Name takes remaining space */}
         <Typography
           variant="body1"
           sx={{
             flexGrow: 1,
-            display: '-webkit-box',
-            WebkitBoxOrient: 'vertical',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
-            width: '100%',
+            whiteSpace: 'nowrap',
           }}
-          color="initial"
         >
           {name}
         </Typography>
-        {/*  */}
-        <IconButton size="small" onClick={() => handler(_id)} disabled={handlerIsLoading}>
-          <Add />
+
+        {/* Button stays at end */}
+        <IconButton
+          size="small"
+          onClick={() => handler(_id)}
+          disabled={handlerIsLoading}
+          sx={{
+            bgcolor: isAdded ? 'error.main' : 'blue',
+            color: '#fff',
+            transition: 'all 0.2s ease',
+
+            '&:hover': {
+              bgcolor: isAdded ? 'error.dark' : 'blue ',
+              transform: 'scale(1)',
+            },
+
+            '&:disabled': {
+              bgcolor: 'grey.400',
+            },
+          }}
+        >
+          {isAdded ? <Remove /> : <Add />}
         </IconButton>
       </Stack>
     </ListItem>

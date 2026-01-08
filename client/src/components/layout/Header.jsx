@@ -46,10 +46,10 @@ const Header = () => {
   const navigettogroup = () => naviget('/groups');
 
   return (
-    <div className={`w-full shadow-lg bg-orange-500 static`}>
+    <div className={`w-full shadow-lg bg-gray-100 static border-b border-gray-300`}>
       <div className="px-2 py-4 w-full flex item-center justify-between">
-        <div className="flex items-center justify-start text-white">
-          <p className="text-2xl font-semibold hidden  sm:block">Pingee</p>
+        <div className="flex items-center justify-start text-black">
+          <p className="text-2xl font-semibold hidden  sm:block">Link</p>
           <div
             onClick={() => {
               hadlemobileClick();

@@ -10,7 +10,7 @@ import moment from 'moment';
 const Profile = () => {
   return (
     <Stack
-      className="bg-white h-full border-l-2 flex items-center  border-gray-300"
+      className="bg-gray-100 h-full border-l-2 flex items-center  border-gray-300"
       spacing={'2rem'}
       direction={'column'}
       alignItems={'center'}

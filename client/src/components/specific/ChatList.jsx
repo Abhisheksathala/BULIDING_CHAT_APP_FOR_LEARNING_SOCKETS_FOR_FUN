@@ -1,13 +1,13 @@
 import React from 'react';
 
 import ChatItem from '../shared/ChatItem';
+import Applayout from "../layout/Applayout"
 
 const ChatList = ({
   w = '100%',
   chats = [],
   chatId,
   onlineUsers = [],
-
   newMessagesAlert = [
     {
       chatId: '',

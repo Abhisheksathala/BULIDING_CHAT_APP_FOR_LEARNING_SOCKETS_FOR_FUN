@@ -21,8 +21,8 @@ const AppLayout = (WrappedComponent) => {
         <div className="overflow-hidden w-full">
           <Title title="Home Page" description="Welcome to the chat app" />
           <Header />
-          <div className="flex h-screen w-full bg-yellow-500">
-            <div className=" h-screen w-full hidden sm:block">
+          <div className="flex h-screen w-full bg-gray-100">
+            <div className=" h-screen w-full hidden sm:block border-r border-gray-300">
               <ChatList
                 chats={userChatData}
                 chatId={'1'}

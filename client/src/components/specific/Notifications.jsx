@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { Dialog, Stack, DialogTitle, Typography, ListItem, Avatar, Button } from '@mui/material';
-import { grey } from '@mui/material/colors';
+import { grey,blue } from '@mui/material/colors';
 
 const Notifications = ({ open = true }) => {
   const [notifications, setNotifications] = React.useState([
@@ -34,7 +34,7 @@ const Notifications = ({ open = true }) => {
           sm: '2rem',
         }}
         sx={{
-          width: { xs: '22rem', sm: '32rem' }, // ⬅️ made it wider
+          width: { xs: '22rem', sm: '32rem' },
         }}
       >
         <DialogTitle>Notifications</DialogTitle>
@@ -78,9 +78,9 @@ const NotifictionItem = memo(({ sender, _id, handler }) => {
           <Button
             sx={{
               color: 'white',
-              bgcolor: 'black',
+              bgcolor: "blue",
               '&:hover': {
-                backgroundColor: grey[700],
+                backgroundColor: blue[800],
               },
             }}
             onClick={() => handler({ _id, accept: true })}
