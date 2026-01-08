@@ -36,3 +36,22 @@ export const userChatData = [
     },
   },
 ];
+
+export const samplemessage = [
+  {
+    attachment: [
+      {
+        public_id: 'Asddsadas',
+        url: 'https://imgs.search.brave.com/ph3CUhZjOU0uMo2NFbWUp6cUQPVn40Dm9T1OFQ346AA/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9pMC53/cC5jb20vcGljanVt/Ym8uY29tL3dwLWNv/bnRlbnQvdXBsb2Fk/cy9taW5pbWFsaXN0/LWhlYWRlci1waG90/by13aXRoLXdvbWFu/LXdpdGgtY2xvc2Vk/LWV5ZXMtZnJlZS1p/bWFnZS5qcGVnP3c9/NjAwJnF1YWxpdHk9/ODA',
+      },
+    ],
+    content: 'L*unda ka message hay bhai',
+    _id: 'ajjdsajdjadsadasdasd',
+    sender: {
+      _id: 'user._id',
+      name: 'chman',
+    },
+    chat: 'chatId',
+    createdAT: '2026-01-12T10:41:30.6789',
+  },
+];

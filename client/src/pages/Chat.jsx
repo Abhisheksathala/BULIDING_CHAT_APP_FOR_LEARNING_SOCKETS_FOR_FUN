@@ -6,12 +6,20 @@ import { AttachFile, Send } from '@mui/icons-material';
 
 import { InputBox } from '../components/styles/InputBox';
 import FileMenu from '../components/dialogs/FileMenu';
+import { samplemessage } from '../components/constants/sampleData';
+import MessageComponent from '../components/shared/MessageComponent';
+
+const user = {
+  _id: 'jflsjflksjdkfjsd',
+  name: 'abhishek',
+};
 
 const Chat = () => {
   const ContainerRef = React.useRef(null);
+  const FilemenuRef = React.useRef(null);
 
   return (
-    <Stack ref={ContainerRef} height="100%" bgcolor={grey[100]} sx={{ overflow: 'hidden' }}>
+    <Stack className="relative" height="100%" bgcolor={grey[100]} sx={{ overflow: 'hidden' }}>
       <Box
         boxSizing={'border-box'}
         sx={{
@@ -22,8 +30,14 @@ const Chat = () => {
           overflowX: 'hidden',
           overflowY: 'auto',
         }}
+        ref={ContainerRef}
       >
         {/* message render */}
+        {samplemessage.map((i) => (
+          <>
+            <MessageComponent message={i} user={user} />
+          </>
+        ))}
       </Box>
 
       <Box
@@ -36,7 +50,7 @@ const Chat = () => {
         }}
       >
         <Stack direction="row" alignItems="center" spacing={1}>
-          <IconButton>
+          <IconButton ref={FilemenuRef}>
             <AttachFile />
           </IconButton>
 
@@ -57,9 +71,7 @@ const Chat = () => {
           </IconButton>
         </Stack>
       </Box>
-
-<FileMenu />
-
+      <FileMenu />
     </Stack>
   );
 };
