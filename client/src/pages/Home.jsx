@@ -18,7 +18,6 @@ const Home = () => {
           px: 4,
           py: 5,
           backdropFilter: 'blur(12px)',
-          backgroundColor: 'rgba(255,255,255,0.6)',
           boxShadow: '0 10px 30px rgba(0,0,0,0.08)',
           textAlign: 'center',
           height: '100%',
