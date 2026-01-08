@@ -6,11 +6,11 @@ import { AttachFile, Send } from '@mui/icons-material';
 
 import { InputBox } from '../components/styles/InputBox';
 import FileMenu from '../components/dialogs/FileMenu';
-import { samplemessage } from '../components/constants/sampleData';
+import { sampleMessages } from '../components/constants/sampleData';
 import MessageComponent from '../components/shared/MessageComponent';
 
 const user = {
-  _id: 'jflsjflksjdkfjsd',
+  _id: 'user_002',
   name: 'abhishek',
 };
 
@@ -29,13 +29,15 @@ const Chat = () => {
           padding: '1rem',
           overflowX: 'hidden',
           overflowY: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
         }}
         ref={ContainerRef}
       >
         {/* message render */}
-        {samplemessage.map((i) => (
+        {sampleMessages.map((item, index) => (
           <>
-            <MessageComponent message={i} user={user} />
+            <MessageComponent key={index} message={item} user={user} />
           </>
         ))}
       </Box>

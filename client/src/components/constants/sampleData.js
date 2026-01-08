@@ -37,21 +37,42 @@ export const userChatData = [
   },
 ];
 
-export const samplemessage = [
+export const sampleMessages = [
   {
-    attachment: [
+    _id: 'msg_001',
+    content: 'Hey bro 👋, did you check the new design?',
+    attachments: [
       {
-        public_id: 'Asddsadas',
-        url: 'https://imgs.search.brave.com/ph3CUhZjOU0uMo2NFbWUp6cUQPVn40Dm9T1OFQ346AA/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9pMC53/cC5jb20vcGljanVt/Ym8uY29tL3dwLWNv/bnRlbnQvdXBsb2Fk/cy9taW5pbWFsaXN0/LWhlYWRlci1waG90/by13aXRoLXdvbWFu/LXdpdGgtY2xvc2Vk/LWV5ZXMtZnJlZS1p/bWFnZS5qcGVnP3c9/NjAwJnF1YWxpdHk9/ODA',
+        public_id: 'chat/image_001',
+        url: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f',
+        type: 'image',
       },
     ],
-    content: 'L*unda ka message hay bhai',
-    _id: 'ajjdsajdjadsadasdasd',
     sender: {
-      _id: 'user._id',
-      name: 'chman',
+      _id: 'user_001',
+      name: 'Abhishek',
+      avatar: 'https://i.pravatar.cc/150?img=3',
     },
-    chat: 'chatId',
-    createdAT: '2026-01-12T10:41:30.6789',
+    chat: 'chat_001',
+    createdAt: '2025-01-12T10:41:30.678Z',
   },
+  {
+    _id: 'msg_002',
+    content: 'Good',
+    attachments: [
+      {
+        public_id: 'chat/image_001',
+        url: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f',
+        type: 'image',
+      },
+    ],
+    sender: {
+      _id: 'user_002',
+      name: 'Rohit',
+      avatar: 'https://i.pravatar.cc/150?img=5',
+    },
+    chat: 'chat_001',
+    createdAt: '2025-01-12T10:42:10.123Z',
+  },
+
 ];
