@@ -9,4 +9,4 @@ export const fileFormat = (url = '') => {
   return 'file';
 };
 
-export const transformImage = (url = '') => url;
+export const transformImage = (url = '', width = 100) => url;

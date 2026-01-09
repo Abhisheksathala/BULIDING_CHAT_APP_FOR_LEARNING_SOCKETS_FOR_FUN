@@ -2,6 +2,8 @@ import React, { memo } from 'react';
 import Typography from '@mui/material/Typography';
 import moment from 'moment';
 import { fileFormat } from '../lib/features';
+import RenderAttachment from './RenderAttachment';
+import { Box } from '@mui/material';
 
 const MessageComponent = ({ message, user }) => {
   const { sender, content, attachments = [], createdAt } = message;
@@ -46,26 +48,16 @@ const MessageComponent = ({ message, user }) => {
         )}
 
         {attachments.length > 0 &&
-          attachments.map(({ url, public_id }, index) => {
-
-            const file = fileFormat(url)
+          attachments.map((item, index) => {
+            const url = item.url;
+            const file = fileFormat(url);
 
             return (
-              <>
-                <Box key={index}>
-                  <a
-                    href=""
-                    target="_blank"
-                    download
-                    style={{
-                      color: 'black',
-                    }}
-                  >
-
-
-                  </a>
-                </Box>
-              </>
+              <Box key={index} mt={1}>
+                <a href={url} target="_blank" rel="noreferrer" download style={{ color: 'black' }}>
+                  {RenderAttachment(file, url)}
+                </a>
+              </Box>
             );
           })}
       </div>
