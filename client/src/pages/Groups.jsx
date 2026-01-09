@@ -1,15 +1,19 @@
-import React, { memo } from 'react';
-import { Grid, Box, Tooltip, IconButton, Drawer, Stack, Typography } from '@mui/material';
-import { grey } from '@mui/material/colors';
-import { KeyboardBackspace, Menu } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
+import React, {memo} from 'react';
+import {Box, Drawer, IconButton, Stack, TextField, Tooltip, Typography,} from '@mui/material';
+import {grey} from '@mui/material/colors';
+import {Done, Edit, KeyboardBackspace, Menu} from '@mui/icons-material';
+import {Link, useNavigate, useSearchParams} from 'react-router-dom';
 import AvaterCard from '../components/shared/AvaterCard';
-import { userChatData } from '../components/constants/sampleData';
-import {Link} from "react-router-dom"
+import {userChatData} from '../components/constants/sampleData';
 
 const Groups = () => {
   const [isMobileopen, setIsmobileopen] = React.useState(false);
 
+  const [isEdit, setIsEdit] = React.useState(false);
+  const [groupName, setGroupName] = React.useState('');
+  const [groupNameUpdatedValue, setGroupNameUpdateValue] = React.useState('');
+
+  const chatId = useSearchParams()[0].get('group');
   const navigate = useNavigate();
   const navigateBack = () => {
     navigate('/');
@@ -21,6 +25,21 @@ const Groups = () => {
   const handleMobileClose = () => {
     setIsmobileopen(false);
   };
+
+  const updateGroupName = () => {
+    setIsEdit(false);
+    console.log('update group name');
+  };
+
+  React.useEffect(()=>{
+      setGroupName(`name ${chatId}`)
+      setGroupNameUpdateValue(`name ${chatId}`)
+      return ()=>{
+          setGroupName(``)
+          setGroupNameUpdateValue(``)
+          setIsEdit(false)
+      }
+  },[chatId])
 
   const BackButton = () => (
     <>
@@ -68,6 +87,43 @@ const Groups = () => {
     </>
   );
 
+  const GroupName = () => {
+    return (
+      <>
+        <Stack
+          direction={'row'}
+          alignItems={'center'}
+          justifyContent={'center'}
+          spacing={'1rem'}
+          padding={'3rem'}
+        >
+          {isEdit ? (
+            <>
+              <TextField
+                value={groupNameUpdatedValue}
+                onChange={(e) => {
+                  setGroupNameUpdateValue(e.target.value);
+                }}
+              />
+              <IconButton aria-label="" onClick={updateGroupName}>
+                <Done />
+              </IconButton>
+            </>
+          ) : (
+            <>
+              <Typography variant="h4">{
+                  groupName
+              }</Typography>
+              <IconButton onClick={() => setIsEdit(true)}>
+                <Edit />
+              </IconButton>
+            </>
+          )}
+        </Stack>
+      </>
+    );
+  };
+
   return (
     <Box sx={{ display: 'flex', height: '100vh', width: '100%' }}>
       {/* Left Panel - Fixed width */}
@@ -79,7 +135,7 @@ const Groups = () => {
           p: 2,
         }}
       >
-        <GroupList myGroup={userChatData} w={'50vw'} chatId={'ada'} />
+        <GroupList myGroup={userChatData} chatId={chatId} />
       </Box>
 
       {/* Right Panel - Takes remaining space */}
@@ -92,9 +148,26 @@ const Groups = () => {
           position: 'relative',
           p: '1rem 3rem',
           width: '70%',
+
         }}
       >
         <BackButton />
+          {
+              groupName &&  <>
+              <GroupName />
+              <Typography margin={"2rem"} alignItems={"flex-start"} variant={"body1"}>
+
+              </Typography>
+              <Stack maxWidth={"45rem"} width={"100%"} boxSizing={"border-box"} padding={{
+                  sm:"1rem",
+                  xs:"0",
+                  md:"1rem 4rem"
+              }}  spacing={"2rem"}   bgcolor={`${grey[300]}`} height={"50vh"}  overflow={"auto"} >
+              {/*member*/}
+              </Stack>
+              </>
+
+          }
       </Box>
 
       <Drawer
@@ -106,7 +179,8 @@ const Groups = () => {
             sm: 'none',
           },
         }}
-      ></Drawer>
+      ><GroupList myGroup={userChatData} w={'70vw'} chatId={chatId} />
+      </Drawer>
     </Box>
   );
 };
@@ -115,13 +189,7 @@ const GroupList = ({ w = '100%', myGroup = [], chatId }) => {
   return (
     <Stack width={w}>
       {myGroup.length > 0 ? (
-        myGroup.map((group) => (
-          <GroupListItem
-            group={group}
-            chatId={chatId}
-            key={group._id}
-          />
-        ))
+        myGroup.map((group) => <GroupListItem group={group} chatId={chatId} key={group._id} />)
       ) : (
         <Typography textAlign="center" padding="1rem">
           No Groups
@@ -131,14 +199,16 @@ const GroupList = ({ w = '100%', myGroup = [], chatId }) => {
   );
 };
 
-
 const GroupListItem = memo(({ group, chatId }) => {
   const { name, avater, _id } = group;
 
   return (
     <Link
       to={`?group=${_id}`}
-      // underline="none"
+      onClick={(e) => {
+        if (chatId === _id) e.preventDefault();
+      }}
+      // underline="none"q
       // color="inherit"
     >
       <Stack>
@@ -148,6 +218,5 @@ const GroupListItem = memo(({ group, chatId }) => {
     </Link>
   );
 });
-
 
 export default Groups;
