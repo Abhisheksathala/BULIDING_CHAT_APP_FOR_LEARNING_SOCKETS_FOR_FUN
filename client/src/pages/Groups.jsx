@@ -8,6 +8,7 @@ import {userChatData} from '../components/constants/sampleData';
 
 
 const ConfrimDeleteDialog = React.lazy(() => import("../components/dialogs/ConfrimDeleteDialog.jsx"))
+const AddMemberDialog = React.lazy(() => import("../components/dialogs/AddMemberDialog.jsx"))
 
 const Groups = () => {
     const [isMobileopen, setIsmobileopen] = React.useState(false);
@@ -44,7 +45,9 @@ const Groups = () => {
 
 
     const openAddMemberHandler = () => {
+
     }
+    const isAddMember = true;
 
     const updateGroupName = () => {
         setIsEdit(false);
@@ -224,6 +227,13 @@ const Groups = () => {
                         />
                     </Suspense>
                 </>
+            }
+            {
+                isAddMember && (
+                    <Suspense fallback={<div>Loading....</div>}>
+                        <AddMemberDialog/>
+                    </Suspense>
+                )
             }
             <Drawer
                 open={isMobileopen}
