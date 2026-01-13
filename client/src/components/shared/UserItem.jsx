@@ -2,7 +2,7 @@ import React, {memo} from 'react';
 import {Avatar, IconButton, ListItem, Stack, Typography,} from '@mui/material';
 import {Add, Remove} from '@mui/icons-material';
 
-const UserItem = ({user, handler, handlerIsLoading, isAdded = false}) => {
+const UserItem = ({user, handler, handlerIsLoading, isAdded = false, styling}) => {
 
     // , isAdded = false
 
@@ -16,6 +16,7 @@ const UserItem = ({user, handler, handlerIsLoading, isAdded = false}) => {
                 spacing={2}
                 padding={"0.5rem"}
                 sx={{width: '100%'}}
+                {...styling}
             >
                 <Avatar/>
 
