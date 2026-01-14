@@ -129,11 +129,29 @@ const Dashboard = () => {
 const Widget = ({ title, value, Icon }) => {
   return (
     <>
-      <Paper>
+      <Paper elevation={3} sx={{
+        padding:"2rem",
+        margin: '2rem 0',
+        borderRadius:"1rem",
+        width:"20rem"
+      }}>
         <Stack alignItems={"center"} spacing={"1rem"}>
-          <Typography>{value}</Typography>
-          <Stack>
-            {Icon ? Icon : ""}
+          <Typography
+            sx={{
+              color: "rgba(0,0,0,0.7)",
+              borderRadius: "50%",
+              border: "5px solid black",
+              width:"5rem",
+              height: "5rem",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            {value}
+          </Typography>
+          <Stack direction={"row"} spacing={"1rem"} alignItems={"center"}>
+            {Icon ? Icon : "Icon"}
             <Typography>{title}</Typography>
           </Stack>
         </Stack>
