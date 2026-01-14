@@ -11,6 +11,7 @@ import {
 import moment from "moment";
 import { SearchField } from "../../constants/StyledComponents.jsx";
 import { CurvedButton } from "../../constants/StyledComponents.jsx";
+import { Linechart ,DoughnutChart} from "../../components/specific/Charts.jsx";
 
 const AppBar = () => {
   return (
@@ -45,32 +46,41 @@ const AppBar = () => {
   );
 };
 
+const Widges = () => {
+  return (
+    <>
+      <Stack
+        justifyContent={"space-between"}
+        alignItems={"center"}
+        spacing={"2rem"}
+        margin={"2rem 0"}
+        direction={{
+          xs: "column",
+          sm: "row",
+        }}
+      >
+        <Widget title={"user"} value={34} Icon={<Person />} />
+        <Widget title={"chats"} value={14} Icon={<Group />} />
+        <Widget title={"messages"} value={44} Icon={<Message />} />
+      </Stack>
+    </>
+  );
+};
+
 const Dashboard = () => {
-  const Widges = () => {
-    return (
-      <>
-        <Stack
-          justifyContent={"space-between"}
-          alignItems={"center"}
-          spacing={"2rem"}
-          margin={"2rem 0"}
-          direction={{
-            xs: "column",
-            sm: "row",
-          }}
-        >
-          <Widget title={"user"} value={34} Icon={<Person />} />
-          <Widget title={"chats"} value={14} Icon={<Group />} />
-          <Widget title={"messages"} value={44} Icon={<Message />} />
-        </Stack>
-      </>
-    );
-  };
   return (
     <AdminLayOut>
       <Container component={"main"}>
         <AppBar />
-        <Stack direction={"row"} spacing={"2rem"} flexWrap={"wrap"}>
+        <Stack direction={{
+          xs:"column",
+          lg:"row"
+        }} spacing={"2rem"} flexWrap={"wrap"} justifyContent={"center"} alignItems={{
+          xs:"center",
+          lg:"flex-start"
+        }} sx={{
+          gap:"2rem"
+        }}>
           <Paper
             elevation={3}
             sx={{
@@ -84,7 +94,7 @@ const Dashboard = () => {
             <Typography variant="h4" margin={"2rem 0"}>
               Last message
             </Typography>
-            <Typography variant="h5">{"chat"}</Typography>
+            <Linechart />
           </Paper>
           <Paper
             elevation={3}
@@ -102,7 +112,7 @@ const Dashboard = () => {
               height: "25rem",
             }}
           >
-            {"Dougnut chat"}
+           <DoughnutChart  Value={[1,2]} labels={["single chats","group charts"]}/>
 
             <Stack
               position={"absolute"}
