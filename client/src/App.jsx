@@ -2,10 +2,16 @@ import React, {Suspense} from 'react';
 import {Route, Routes} from 'react-router-dom';
 import ProtectRoute from './components/auth/ProtectRoute';
 import LayoutLoader from './components/layout/Loader';
+
+// admin pages 
 import AdminLogin from "./pages/admin/AdminLogin.jsx";
 import Dashboard from "./pages/admin/Dashboard.jsx";
+const   ChatManagement = React.lazy(()=> import("../src/pages/admin/ChatManagement.jsx"))
+const   Usermanagement = React.lazy(()=> import("../src/pages/admin/Usermanagement.jsx"))
+const   Groupmanagement = React.lazy(()=> import("../src/pages/admin/Groupmanagment.jsx"))
+const Message = React.lazy(()=> import("../src/pages/admin/Message.jsx"))
 
-// PAGES
+//user  PAGES
 const Home = React.lazy(() => import('./pages/Home'));
 const Login = React.lazy(() => import('./pages/Login'));
 const Chat = React.lazy(() => import('./pages/Chat'));
