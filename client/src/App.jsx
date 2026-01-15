@@ -1,8 +1,7 @@
 import React, { Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 import ProtectRoute from "./components/auth/ProtectRoute";
-import axios from "axios"
-
+import axios from "axios";
 
 // loader
 import LayoutLoader from "./components/layout/Loader";
@@ -27,19 +26,27 @@ const Login = React.lazy(() => import("./pages/Login"));
 const Chat = React.lazy(() => import("./pages/Chat"));
 const Groups = React.lazy(() => import("./pages/Groups"));
 const NotFound = React.lazy(() => import("./pages/PagenotFound"));
-
-// env imports 
+// env imports
 import { server } from "./constants/config.js";
-
-let user = true;
-
+// import redux tookit libs ]
+import { useDispatch, useSelector } from "react-redux";
+import { userNotexist } from "./redux/reducers/auth.js";
 
 const App = () => {
-    React.useEffect(()=>{
-    // console.log(server)
-    axios.get(`${server}/api`)
-    },[])
-  return (
+  const { user, loader } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    axios
+      .get(`${server}/api/v1/user/getuser`)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch(() => dispatch(userNotexist()));
+  }, [dispatch]);
+  return loader ? (
+    <LayoutLoader />
+  ) : (
     <Suspense
       fallback={
         <>

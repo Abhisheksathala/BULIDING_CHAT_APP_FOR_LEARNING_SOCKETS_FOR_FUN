@@ -4,11 +4,12 @@ import {
   login,
   register,
   getUser,
-  updateUser,
   logout,
-  deleteUser,
   searchUser,
-  sendFriendrequest,acceptFriendrequest,getallnotification
+   sendFriendrequest,acceptFriendrequest,getallnotification,
+  deleteUser,
+  updateUser,
+
 } from '../controllers/userController.js';
 import { singleAvater } from '../middlewares/multer.js';
 import { isAuthenticated } from '../middlewares/auth.js';
