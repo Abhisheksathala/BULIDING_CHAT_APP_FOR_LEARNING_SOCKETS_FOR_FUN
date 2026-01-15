@@ -3,7 +3,7 @@ import 'dotenv/config';
 import { corsconfig } from './src/utils/corsconfig.js';
 import cookieParser from 'cookie-parser';
 import { errorhandler } from './src/middlewares/error.js';
-import cloudinary from "cloudinary"
+import {v2 as cloudinary} from "cloudinary"
 import { requestLogger, addTimeStamp } from './src/middlewares/globalerrorhandler.js';
 import { globalErrorhandler } from './src/middlewares/error.js';
 // seeders
@@ -84,6 +84,11 @@ io.on('connection', (socket) => {
     userSocketIDs.delete(user._id.toString())
   });
 });
+
+
+cloudinary.config({
+  cloud_name:process.env.CLOUD_NAME
+})
 
 // apis
 app.use(corsconfig());
