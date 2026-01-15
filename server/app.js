@@ -3,6 +3,7 @@ import 'dotenv/config';
 import { corsconfig } from './src/utils/corsconfig.js';
 import cookieParser from 'cookie-parser';
 import { errorhandler } from './src/middlewares/error.js';
+import cloudinary from "cloudinary"
 import { requestLogger, addTimeStamp } from './src/middlewares/globalerrorhandler.js';
 import { globalErrorhandler } from './src/middlewares/error.js';
 // seeders

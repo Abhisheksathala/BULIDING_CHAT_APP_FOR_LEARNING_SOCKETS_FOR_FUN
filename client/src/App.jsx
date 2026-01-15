@@ -1,6 +1,7 @@
 import React, { Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 import ProtectRoute from "./components/auth/ProtectRoute";
+import { Toaster } from "react-hot-toast";
 import axios from "axios";
 
 // loader
@@ -47,37 +48,40 @@ const App = () => {
   return loader ? (
     <LayoutLoader />
   ) : (
-    <Suspense
-      fallback={
-        <>
-          <LayoutLoader />
-        </>
-      }
-    >
-      <Routes>
-        {/*  */}
-        <Route element={<ProtectRoute user={user} />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/chat/:id" element={<Chat />} />
-          <Route path="/groups" element={<Groups />} />
-        </Route>
-        {/*  */}
-        <Route element={<ProtectRoute user={!user} redirect="/" />}>
-          <Route path="/userauthentication">
-            <Route path="login" element={<Login type={"login"} />} />
-            <Route path="register" element={<Login type={"signin"} />} />
+    <>
+      <Suspense
+        fallback={
+          <>
+            <LayoutLoader />
+          </>
+        }
+      >
+        <Routes>
+          {/*  */}
+          <Route element={<ProtectRoute user={user} />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/chat/:id" element={<Chat />} />
+            <Route path="/groups" element={<Groups />} />
           </Route>
-        </Route>
-        {/*  */}
-        <Route path="/admin" element={<AdminLogin />} />
-        <Route path="/admin/dashboard" element={<Dashboard />} />
-        <Route path="/admin/ChatManagement" element={<ChatManagement />} />
-        <Route path="/admin/user-managment" element={<Usermanagement />} />
-        <Route path="/admin/group-management" element={<Groupmanagement />} />
-        <Route path="/admin/messages" element={<Message />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </Suspense>
+          {/*  */}
+          <Route element={<ProtectRoute user={!user} redirect="/" />}>
+            <Route path="/userauthentication">
+              <Route path="login" element={<Login type={"login"} />} />
+              <Route path="register" element={<Login type={"signin"} />} />
+            </Route>
+          </Route>
+          {/*  */}
+          <Route path="/admin" element={<AdminLogin />} />
+          <Route path="/admin/dashboard" element={<Dashboard />} />
+          <Route path="/admin/ChatManagement" element={<ChatManagement />} />
+          <Route path="/admin/user-managment" element={<Usermanagement />} />
+          <Route path="/admin/group-management" element={<Groupmanagement />} />
+          <Route path="/admin/messages" element={<Message />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
+      <Toaster position="top-center"/>
+    </>
   );
 };
 
