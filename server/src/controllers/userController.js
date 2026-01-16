@@ -5,7 +5,7 @@ import chatModel from '../models/chatModel.js';
 
 import { sendToken } from '../utils/sendtoken.js';
 
-import { emitEvent } from '../utils/features.js';
+import { emitEvent, uploadFilesTocloudinary } from '../utils/features.js';
 import { NEW_REQUEST, REFEATCH_CHATS } from '../constants/events.js';
 import { getothermember } from '../helpers/Hpelerchat.js';
 
@@ -27,9 +27,11 @@ export const register = async (req, res) => {
 
     if(!file) throw new Error("plz upload an avater")
 
+      const result = await uploadFilesTocloudinary([file])
+
     const avater = {
-      public_id: 'ffsdfdsfs' || '',
-      url: 'req.file?.path' || '',
+      public_id: result[0].public_id || '',
+      url: result[0].Url || '',
     };
 
     if (!passwordRegex.test(password)) {
