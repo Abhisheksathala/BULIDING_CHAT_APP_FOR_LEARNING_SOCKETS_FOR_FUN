@@ -141,10 +141,9 @@ export const logout = (req, res) => {
   try {
   res.clearCookie('chattu-token', '', {
       maxAge: 0,
-      httpOnly: true,
+      httpOnly: true, 
       secure: true,
       sameSite: 'None',
-      path:"/"
     });
     // Clear the token cookie
     // Optionally, you can also clear the user session or any other related data here

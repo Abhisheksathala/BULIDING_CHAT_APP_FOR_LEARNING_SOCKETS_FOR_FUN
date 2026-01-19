@@ -8,15 +8,25 @@ import { userChatData } from "../constants/sampleData.js";
 import Header from "./Header";
 // com
 import Profile from "../specific/Profile.jsx";
+import { useMyChatsQuery } from "../../redux/api/api.js";
 
 
 // Higher Order Component
 const AppLayout = (WrappedComponent) => {
-  const handleDeleteChat = async () => {
-   
-  };
+  
+
 
   return (props) => {
+
+  const {isLoading,data,isError,refeatch} = useMyChatsQuery("")
+  
+  console.log(data)
+
+
+  const handleDeleteChat = async (e,_id,groupChat) => {
+   e.preventDefault()
+  };
+
     return (
       <>
         <div className="overflow-hidden w-full ">

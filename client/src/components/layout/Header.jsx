@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 
 // DISPATCH
 import { useDispatch , useSelector } from "react-redux";
+import { userNotexist } from "../../redux/reducers/auth.js";
 
 // PAGES
 const SearchDialog = React.lazy(() => import("../specific/Search"));
@@ -56,16 +57,23 @@ const Header = () => {
   };
 
   // LOGOUTHANDLER
-  const logouthandler = async () => {
-    try {
-      const { data } = await axios.post(`${server}/api/v1/user/logout`, {
-        withCredentials: true,
-      });
-      toast.success(data.message);
-    } catch (error) {
-      toast.error(error?.response?.data?.message || "somthin went wrong bro");
-    }
-  };
+ const logouthandler = async () => {
+  try {
+    const { data } = await axios.post(
+      `${server}/api/v1/user/logout`,
+      {}, 
+      {
+        withCredentials: true, 
+      }
+    );
+    dispatch(userNotexist());
+    toast.success(data.message);
+  } catch (error) {
+    toast.error(error?.response?.data?.message || "something went wrong bro");
+  }
+};
+
+  // navigation 
   const navigettogroup = () => naviget("/groups");
 
   return (
