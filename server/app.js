@@ -85,7 +85,6 @@ io.on('connection', (socket) => {
   });
 });
 
-
 cloudinary.config({
   cloud_name:process.env.CLOUD_NAME,
   api_key:process.env.CLOUDINAIRY_API_KEY,

@@ -1,6 +1,6 @@
 import { v4 as uuid } from "uuid";
 import { v2 as cloudinary } from "cloudinary";
-import { getBase64 } from "../helpers/Hpelerchat";
+import { getBase64 } from "../helpers/Hpelerchat.js";
 
 export const emitEvent = (req, event, user, data) => {
   console.log("emitEvent called with:", { req, event, user, data });

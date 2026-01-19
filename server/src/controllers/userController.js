@@ -139,11 +139,12 @@ export const getUser = async (req, res) => {
 //
 export const logout = (req, res) => {
   try {
-    const token = res.clearCookie('chattu-token', '', {
+  res.clearCookie('chattu-token', '', {
       maxAge: 0,
       httpOnly: true,
       secure: true,
       sameSite: 'None',
+      path:"/"
     });
     // Clear the token cookie
     // Optionally, you can also clear the user session or any other related data here

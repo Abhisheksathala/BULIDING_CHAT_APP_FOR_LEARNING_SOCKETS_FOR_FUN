@@ -31,7 +31,7 @@ const NotFound = React.lazy(() => import("./pages/PagenotFound"));
 import { server } from "./constants/config.js";
 // import redux tookit libs ]
 import { useDispatch, useSelector } from "react-redux";
-import { userNotexist } from "./redux/reducers/auth.js";
+import { userExist, userNotexist } from "./redux/reducers/auth.js";
 
 const App = () => {
   const { user, loader } = useSelector((state) => state.auth);
@@ -39,9 +39,10 @@ const App = () => {
 
   React.useEffect(() => {
     axios
-      .get(`${server}/api/v1/user/getuser`)
-      .then((res) => {
-        console.log(res);
+      .get(`${server}/api/v1/user/getuser`,{withCredentials:true})
+      .then(({data}) => {
+         dispatch(userExist(data.user))
+        console.log(data);
       })
       .catch(() => dispatch(userNotexist()));
   }, [dispatch]);

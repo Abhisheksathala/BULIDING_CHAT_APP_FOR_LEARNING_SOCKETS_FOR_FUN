@@ -1,32 +1,34 @@
-import React, { Suspense } from 'react';
+import React, { Suspense } from "react";
+
+import axios from "axios";
+import { server } from "../../constants/config.js";
+import toast from "react-hot-toast";
 
 // ICON
-import { BiMenuAltLeft } from 'react-icons/bi';
-import { CiSearch } from 'react-icons/ci';
-import { FaPlus } from 'react-icons/fa';
-import { CiBellOn } from 'react-icons/ci';
-import { IoMdExit } from 'react-icons/io';
-import { BsPerson } from 'react-icons/bs';
-import BackDorp from '../shared/BackDorp';
+import { BiMenuAltLeft } from "react-icons/bi";
+import { CiSearch } from "react-icons/ci";
+import { FaPlus } from "react-icons/fa";
+import { CiBellOn } from "react-icons/ci";
+import { IoMdExit } from "react-icons/io";
+import { BsPerson } from "react-icons/bs";
+import BackDorp from "../shared/BackDorp";
 
 // NAV
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 // PAGES
-const SearchDialog = React.lazy(() => import('../specific/Search'));
-const NewGroup = React.lazy(() => import('../specific/NewGroup'));
-const Notifications = React.lazy(() => import('../specific/Notifications'));
+const SearchDialog = React.lazy(() => import("../specific/Search"));
+const NewGroup = React.lazy(() => import("../specific/NewGroup"));
+const Notifications = React.lazy(() => import("../specific/Notifications"));
 
 const Header = () => {
   // NAVIGATION
   const naviget = useNavigate();
-
   // SATES
   const [mobile, setMobile] = React.useState(false);
   const [search, setSearch] = React.useState(false);
   const [opennewGroup, setOpennewGroup] = React.useState(false);
   const [notifications, setNotifications] = React.useState(false);
-
   // FUNCTIONS
   const hadlemobileClick = () => {
     setMobile((prev) => !prev);
@@ -40,13 +42,22 @@ const Header = () => {
   const opennotification = () => {
     setNotifications((prev) => !prev);
   };
-  const logouthandler = () => {
-    return naviget('/userauthentication/login');
+  const logouthandler = async () => {
+    try {
+      const { data } = await axios.post(`${server}/api/v1/user/logout`, {
+        withCredentials: true,
+      });
+      toast.success(data.message);
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "somthin went wrong bro");
+    }
   };
-  const navigettogroup = () => naviget('/groups');
+  const navigettogroup = () => naviget("/groups");
 
   return (
-    <div className={`w-full shadow-lg bg-gray-100 static border-b border-gray-300`}>
+    <div
+      className={`w-full shadow-lg bg-gray-100 static border-b border-gray-300`}
+    >
       <div className="px-2 py-4 w-full flex item-center justify-between">
         <div className="flex items-center justify-start text-black">
           <p className="text-2xl font-semibold hidden  sm:block">Link</p>

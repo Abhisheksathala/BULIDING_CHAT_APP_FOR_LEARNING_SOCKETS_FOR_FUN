@@ -8,10 +8,10 @@ import AnimationWarper from "../animation/AnimationWraper";
 import { IoMdPerson } from "react-icons/io";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import { server } from "../constants/config";
 import { useDispatch } from "react-redux";
 import { userExist } from "../redux/reducers/auth";
 import toast from "react-hot-toast";
+import { server } from "../constants/config";
 
 const Login = ({ type }) => {
   const dispatch = useDispatch();
@@ -30,19 +30,13 @@ const Login = ({ type }) => {
           "Content-Type": "application/json",
         },
       };
-      const configRegister = {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      };
 
       if (type === "login") {
         try {
           const { data } = await axios.post(
             `${server}/api/v1/user/login`,
             {
-              identifier: formData.username,
+              identifier: formData.username ,
               password: formData.password,
             },
             config
@@ -56,17 +50,29 @@ const Login = ({ type }) => {
 
       if (type === "signin") {
         try {
-          const formDatas = {
-            username: formData.username,
-            password: formData.password,
-            email: formData.email,
-            bio: formData.bio,
-            avater: formData.avater,
+          // Create FormData for file upload
+          const formDataToSend = new FormData();
+          
+          // Append file if exists
+          if (avater) {
+            formDataToSend.append('avater', avater); // Match the backend field name
+          }
+          
+          // Append other form fields
+          formDataToSend.append('username', formData.username);
+          formDataToSend.append('password', formData.password);
+          formDataToSend.append('email', formData.email);
+          formDataToSend.append('name', formData.name);
+          formDataToSend.append('bio', formData.bio || '');
+
+          const configRegister = {
+            withCredentials: true,
+            // Don't set Content-Type header for FormData, browser will set it automatically
           };
 
           const { data } = await axios.post(
             `${server}/api/v1/user/register`,
-            formDatas,
+            formDataToSend,
             configRegister
           );
           dispatch(userExist(true));
@@ -77,6 +83,7 @@ const Login = ({ type }) => {
       }
     } catch (error) {
       console.log(error);
+      dispatch(userExist(false));
     }
   };
 
@@ -96,7 +103,7 @@ const Login = ({ type }) => {
             <>
               <div className="flex items-center flex-col justify-center gap-4">
                 <label
-                  htmlFor="avater "
+                  htmlFor="avater"
                   className="bg-gray-300 w-[8rem] h-[8rem] rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-100 transition-colors ease-linear duration-300 active:bg-gray-300 overflow-hidden "
                 >
                   {avater ? (
@@ -104,7 +111,7 @@ const Login = ({ type }) => {
                       <img
                         className="aspect-square"
                         src={URL.createObjectURL(avater)}
-                        alt="avater "
+                        alt="avater"
                       />
                     </>
                   ) : (
@@ -114,18 +121,27 @@ const Login = ({ type }) => {
                 <input
                   type="file"
                   {...register("file")}
-                  name="avater "
+                  name="avater"
                   onChange={(e) => {
-                    setAvater(() => e.target.files[0]);
+                    setAvater(e.target.files[0]);
                   }}
-                  id="avater "
+                  id="avater"
                   hidden
                 />
-                {errors.file && (
-                  <p className="text-red-500 text-left">
-                    {errors.file.message}
-                  </p>
-                )}
+                <div className="w-full">
+                  {errors.name && (
+                    <p className="text-red-500 text-left">
+                      {errors.name.message}
+                    </p>
+                  )}
+                  <InputComponent
+                    type={"text"}
+                    placeholder={"name"}
+                    containerclass={""}
+                    className={"px-2 py-2 "}
+                    {...register("name", { required: "name is required" })}
+                  />
+                </div>
                 <div className="w-full">
                   {errors.email && (
                     <p className="text-red-500 text-left">
@@ -174,7 +190,7 @@ const Login = ({ type }) => {
                 placeholder={"bio"}
                 containerclass={""}
                 className={"px-2 py-2 "}
-                {...register("bio", { required: "bio is required" })}
+                {...register("bio")}
               />
             </>
           )}
