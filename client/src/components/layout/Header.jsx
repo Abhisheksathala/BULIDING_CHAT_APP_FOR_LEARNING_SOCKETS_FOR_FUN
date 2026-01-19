@@ -16,19 +16,31 @@ import BackDorp from "../shared/BackDorp";
 // NAV
 import { useNavigate } from "react-router-dom";
 
+// DISPATCH
+import { useDispatch , useSelector } from "react-redux";
+
 // PAGES
 const SearchDialog = React.lazy(() => import("../specific/Search"));
 const NewGroup = React.lazy(() => import("../specific/NewGroup"));
 const Notifications = React.lazy(() => import("../specific/Notifications"));
 
 const Header = () => {
+
   // NAVIGATION
   const naviget = useNavigate();
+
+  // REDUX_DEISPATCH
+
+  const {} = useDispatch((state)=>{})
+
+  const dispatch = useDispatch();
+
   // SATES
   const [mobile, setMobile] = React.useState(false);
   const [search, setSearch] = React.useState(false);
   const [opennewGroup, setOpennewGroup] = React.useState(false);
   const [notifications, setNotifications] = React.useState(false);
+
   // FUNCTIONS
   const hadlemobileClick = () => {
     setMobile((prev) => !prev);
@@ -42,6 +54,8 @@ const Header = () => {
   const opennotification = () => {
     setNotifications((prev) => !prev);
   };
+
+  // LOGOUTHANDLER
   const logouthandler = async () => {
     try {
       const { data } = await axios.post(`${server}/api/v1/user/logout`, {
