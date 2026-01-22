@@ -13,6 +13,9 @@ const ChatItem = ({
   index = 0,
   handleDeleteChat,
 }) => {
+
+  console.log(avater)
+
   return (
     <>
       <Link

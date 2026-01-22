@@ -9,20 +9,27 @@ import Header from "./Header";
 // com
 import Profile from "../specific/Profile.jsx";
 import { useMyChatsQuery } from "../../redux/api/api.js";
+import { useErrors } from "../../hooks/hook.jsx";
 
 
 // Higher Order Component
 const AppLayout = (WrappedComponent) => {
-  
-
-
   return (props) => {
+    
+    const {isLoading,data,isError,refetch , error } = useMyChatsQuery("")
+    console.log(data)
 
-  const {isLoading,data,isError,refetch } = useMyChatsQuery("")
-  console.log(data)
+    useErrors([{isError,error}])
+  
+    // useEffect(()=>{
+    //   if(isError) toast.error(error?.data?.message || "somthing went wrong ")
+    // },[isError,error])
+
   const handleDeleteChat = async (e,_id,groupChat) => {
    e.preventDefault()
   };
+
+
     return (
       <>
         <div className="overflow-hidden w-full ">
@@ -30,8 +37,10 @@ const AppLayout = (WrappedComponent) => {
           <Header />
           <div className="flex h-[calc(100vh-62px)] w-full bg-gray-100">
             <div className=" h-screen w-full hidden sm:block border-r border-gray-300">
-              <ChatList
-                chats={userChatData}
+
+              {
+                isLoading ? "loading..." : <ChatList
+                chats={data?.chats}
                 chatId={"1"}
                 newMessagesAlert={[
                   {
@@ -41,6 +50,8 @@ const AppLayout = (WrappedComponent) => {
                 ]}
                 handleDeleteChat={handleDeleteChat}
               />
+              }
+              
             </div>
             <div className="w-full h-full">
               <WrappedComponent {...props} />

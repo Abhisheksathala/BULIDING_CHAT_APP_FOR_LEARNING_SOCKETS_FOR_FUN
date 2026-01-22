@@ -16,10 +16,15 @@ const ChatList = ({
   ],
   handleDeleteChat,
 }) => {
+
+
+
   return (
     <div className="w-full flex items-start flex-col">
       {chats?.map((data, index) => {
         const { name, avater, _id, groupChat, members } = data;
+
+
 
         const newMessageAlert = newMessagesAlert.find(({ chatId }) => {
           return chatId === _id;
