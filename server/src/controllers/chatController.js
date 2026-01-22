@@ -108,6 +108,8 @@ export const getmychats = async (req, res) => {
       .find({ members: userId })
       .populate('members', 'name avater username email');
 
+      console.log('chat',chat)
+
     /*
             For example, userId = 'user123'
             MongoDB returns all Chat documents where 'members' includes 'user123'.
@@ -153,6 +155,8 @@ export const getmychats = async (req, res) => {
         };
       },
     );
+
+    console.log("transformedChats",transformedChats)
 
     // 10. Return the transformed chats with success message
     return res.status(200).json({

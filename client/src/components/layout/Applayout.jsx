@@ -18,15 +18,11 @@ const AppLayout = (WrappedComponent) => {
 
   return (props) => {
 
-  const {isLoading,data,isError,refeatch} = useMyChatsQuery("")
-  
+  const {isLoading,data,isError,refetch } = useMyChatsQuery("")
   console.log(data)
-
-
   const handleDeleteChat = async (e,_id,groupChat) => {
    e.preventDefault()
   };
-
     return (
       <>
         <div className="overflow-hidden w-full ">
