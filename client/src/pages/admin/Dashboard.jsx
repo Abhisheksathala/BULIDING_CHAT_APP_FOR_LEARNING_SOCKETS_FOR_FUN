@@ -107,7 +107,7 @@ const Dashboard = () => {
               justifyContent: "center",
               alignItems: "center",
               position: "relative",
-              width: "100%",
+              // width: "100%",
               maxWidth: "25rem",
               height: "25rem",
             }}
