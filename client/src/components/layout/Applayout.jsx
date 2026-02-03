@@ -18,7 +18,7 @@ import { setIsMobile } from "../../redux/reducers/misc.js";
 const AppLayout = (WrappedComponent) => {
   return (props) => {
     const { isLoading, data, isError, error,refetch } = useMyChatsQuery("");
-    console.log(data);
+    // console.log(data);
 
     useErrors([{ isError, error }]);
 

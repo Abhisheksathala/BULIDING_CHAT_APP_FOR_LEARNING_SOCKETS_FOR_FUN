@@ -16,9 +16,7 @@ const api = createApi({
       }),
       providesTags: ["Chat"],
     }),
-
     // -----search
-
     searchUser: builder.query({
       query: (name) => ({
         url: `user/searchuser?name=${name}`,
@@ -26,7 +24,6 @@ const api = createApi({
       }),
       providesTags: ["user"],
     }),
-
     // ----
 
     // invalidateTags:["Chat"]

@@ -2,7 +2,7 @@ import { AvatarGroup, Avatar, Box, Stack } from '@mui/material';
 import React from 'react';
 import { transformImage } from '../lib/features';
 
-const AvaterCard = ({ avater = [], max = 4 }) => {
+const AvaterCard = ({ avater = [], max = 3 }) => {
   return (
     <Stack direction="row" spacing={0.5}>
       <AvatarGroup>
@@ -11,7 +11,7 @@ const AvaterCard = ({ avater = [], max = 4 }) => {
             return (
               <Avatar
                 key={Math.random() * 100}
-                src={transformImage(i)}
+                src={transformImage(i.url)}
                 alt={i}
                 sx={{
                   width: '3rem',

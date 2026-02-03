@@ -1,30 +1,26 @@
-import React from 'react';
+import React from "react";
 
-import ChatItem from '../shared/ChatItem';
-import Applayout from "../layout/Applayout"
+import ChatItem from "../shared/ChatItem";
+import Applayout from "../layout/Applayout";
 
 const ChatList = ({
-  w = '100%',
+  w = "100%",
   chats = [],
   chatId,
   onlineUsers = [],
   newMessagesAlert = [
     {
-      chatId: '',
+      chatId: "",
       count: 0,
     },
   ],
   handleDeleteChat,
 }) => {
 
-
-
   return (
     <div className="w-full flex items-start flex-col">
       {chats?.map((data, index) => {
         const { name, avater, _id, groupChat, members } = data;
-
-
 
         const newMessageAlert = newMessagesAlert.find(({ chatId }) => {
           return chatId === _id;

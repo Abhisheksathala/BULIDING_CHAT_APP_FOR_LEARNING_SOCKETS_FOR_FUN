@@ -29,9 +29,7 @@ const Search = () => {
 
   const searchInput = watch("search");
 
-  const [users, setUsers] = React.useState([
-    { _id: 12, name: "abhi", avater: "httpls:googl.com" },
-  ]);
+  const [users, setUsers] = React.useState([]);
 
   const HandleSearch = async (formdata) => {
     console.log("search", formdata);
@@ -65,8 +63,9 @@ const Search = () => {
      if (searchInput && searchInput.trim().length >= 3) {
         searchUser(searchInput)
           .unwrap()
-          .then(({res}) => {
-            setUsers(res.users || []);
+          .then(({users}) => {
+            console.log(users)
+            setUsers(users || []);
           })
           .catch((err) => {
             console.log(err);
@@ -75,7 +74,7 @@ const Search = () => {
       } else {
         setUsers([]);
       }
-    }, 1000);
+    }, 3000);
 
     return () => clearTimeout(delayDebounce);
 

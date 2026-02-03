@@ -18,7 +18,7 @@ const UserItem = ({user, handler, handlerIsLoading, isAdded = false, styling}) =
                 sx={{width: '100%'}}
                 {...styling}
             >
-                <Avatar/>
+                <Avatar src={avater}/>
 
                 {/* Name takes remaining space */}
                 <Typography
