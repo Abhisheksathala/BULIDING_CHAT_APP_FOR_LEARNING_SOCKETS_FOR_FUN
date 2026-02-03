@@ -23,7 +23,7 @@ userRouter.post('/register', singleAvater, registrationValidater(), validateHanl
 userRouter.post('/login', loginValidater(), validateHanlder, login);
 userRouter.post('/logout', logout);
 userRouter.get('/getuser', isAuthenticated, getUser);
-userRouter.post('/searchuser', isAuthenticated, searchUser);
+// userRouter.post('/searchuser', isAuthenticated, searchUser);
 userRouter.get('/searchuser', isAuthenticated, searchUser);
 userRouter.put("/sendrequest",sendrequestvalidater(),validateHanlder,isAuthenticated,sendFriendrequest)
 userRouter.put("/accept-request",acceptRequestValidator(),validateHanlder,isAuthenticated,acceptFriendrequest)

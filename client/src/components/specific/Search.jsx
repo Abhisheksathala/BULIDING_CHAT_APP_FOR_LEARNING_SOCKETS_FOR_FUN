@@ -17,7 +17,11 @@ import { useDispatch } from "react-redux";
 //
 import UserItem from "../shared/UserItem";
 import { setIsSearch } from "../../redux/reducers/misc";
-import { useLazySearchUserQuery } from "../../redux/api/api";
+import {
+  useLazySearchUserQuery,
+  useSendFriendRequestMutation,
+} from "../../redux/api/api";
+import toast from "react-hot-toast";
 
 const Search = () => {
   const {
@@ -30,41 +34,54 @@ const Search = () => {
   const searchInput = watch("search");
 
   const [users, setUsers] = React.useState([]);
+  const [sendFriendRequest] = useSendFriendRequestMutation();
 
   const HandleSearch = async (formdata) => {
     console.log("search", formdata);
 
     if (formdata.search && formdata.search.trim()) {
       try {
-      const result = await searchUser(formdata.search).unwrap();
+        const result = await searchUser(formdata.search).unwrap();
         setUsers(result.users || []);
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     }
   };
 
-  const addFriendHandler = () => {
-    console.log("addFriendHandler");
+  const addFriendHandler = async (id) => {
+    try {
+      const res = await sendFriendRequest({ userId: id });
 
-    // TODO : implememt add friend logic
+      if (res?.data) {
+        toast.success("Friend request sent");
+        console.log(res?.data);
+      }else{
+         const message = error?.response?.data?.message || res.error.data.message;
+         toast.error(message);
+      }
+    } catch (error) {
+      console.log(error);
+      const message = error?.response?.data?.message || "Something went wrong";
+      toast.error(message);
+    }
   };
 
   const isloadingSendFriendRequest = false;
 
   const { isSearch } = useSelector((state) => state.misc);
 
-  const [searchUser,{ data, isLoading, error }] = useLazySearchUserQuery();
+  const [searchUser, { data, isLoading, error }] = useLazySearchUserQuery();
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
-     if (searchInput && searchInput.trim().length >= 3) {
+      if (searchInput && searchInput.trim().length >= 3) {
         searchUser(searchInput)
           .unwrap()
-          .then(({users}) => {
-            console.log(users)
+          .then(({ users }) => {
+            console.log(users);
             setUsers(users || []);
           })
           .catch((err) => {
@@ -77,10 +94,9 @@ const Search = () => {
     }, 3000);
 
     return () => clearTimeout(delayDebounce);
-
   }, [searchInput, searchUser]);
 
-    useEffect(() => {
+  useEffect(() => {
     if (data) {
       setUsers(data.users || []);
     }

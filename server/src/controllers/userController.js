@@ -194,12 +194,12 @@ export const sendFriendrequest = async (req, res) => {
     const { userId } = req.body;
     const request = await requestModel.findOne({
       $or: [
-        { receiver: req.user, sender: userId },
+        { sender: req.user, receiver: userId },
         { sender: userId, receiver: req.user },
       ],
     });
     if (request) {
-      return res.status(403).json({
+      return res.status(409).json({
         success: false,
         code: ' REQUEST EXIST',
         message: 'Request alredy send',
