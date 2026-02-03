@@ -6,22 +6,35 @@ const api = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: `${server}/api/v1/`,
   }),
-  tagTypes:["Chat"],
+  tagTypes: ["Chat","user"],
   endpoints: (builder) => ({
+    // -----my chat
     myChats: builder.query({
       query: () => ({
         url: "chat/my-chats",
         credentials: "include",
       }),
-      providesTags:["Chat"]
+      providesTags: ["Chat"],
     }),
-    invalidateTags:["Chat"]
+
+    // -----search
+
+    searchUser: builder.query({
+      query: (name) => ({
+        url: `user/searchuser?name=${name}`,
+        credentials: "include",
+      }),
+      providesTags: ["user"],
+    }),
+
+    // ----
+
+    // invalidateTags:["Chat"]
   }),
 });
 
 export default api;
 
+console.log(api);
 
-console.log(api)
-
-export const { useMyChatsQuery } = api
+export const { useMyChatsQuery , useLazySearchUserQuery } = api;

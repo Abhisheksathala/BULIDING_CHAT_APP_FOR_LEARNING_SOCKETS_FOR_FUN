@@ -1,8 +1,12 @@
 import React, { memo } from 'react';
 import { Dialog, Stack, DialogTitle, Typography, ListItem, Avatar, Button } from '@mui/material';
 import { grey,blue } from '@mui/material/colors';
+import { useDispatch, useSelector } from 'react-redux';
+import { setIsNotification } from '../../redux/reducers/misc';
 
-const Notifications = ({ open = true }) => {
+const Notifications = () => {
+
+
   const [notifications, setNotifications] = React.useState([
     {
       sender: {
@@ -22,12 +26,20 @@ const Notifications = ({ open = true }) => {
     },
   ]);
 
+  const dishpatch= useDispatch()
+
+  const {isNotification} = useSelector((state)=>state.misc)
+
   const FriendRequestHandler = ({ _id, accept }) => {
     console.log('Friend Request:', { _id, accept });
   };
 
+  const handlenotitifcationclose = ()=>{
+    dishpatch(setIsNotification(false))
+  }
+
   return (
-    <Dialog open={open} onClose={() => {}}>
+    <Dialog open={isNotification} onClose={handlenotitifcationclose}>
       <Stack
         p={{
           xs: '1.5rem',

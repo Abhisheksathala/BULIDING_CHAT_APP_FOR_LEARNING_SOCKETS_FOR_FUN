@@ -17,8 +17,9 @@ import BackDorp from "../shared/BackDorp";
 import { useNavigate } from "react-router-dom";
 
 // DISPATCH
-import { useDispatch , useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { userNotexist } from "../../redux/reducers/auth.js";
+import { setIsMobile, setIsNewGroup, setIsNotification, setIsSearch } from "../../redux/reducers/misc.js";
 
 // PAGES
 const SearchDialog = React.lazy(() => import("../specific/Search"));
@@ -26,54 +27,61 @@ const NewGroup = React.lazy(() => import("../specific/NewGroup"));
 const Notifications = React.lazy(() => import("../specific/Notifications"));
 
 const Header = () => {
-
   // NAVIGATION
   const naviget = useNavigate();
 
   // REDUX_DEISPATCH
 
-  const {} = useDispatch((state)=>{})
+  // const {} = useDispatch((state)=>{})
 
   const dispatch = useDispatch();
-
   // SATES
-  const [mobile, setMobile] = React.useState(false);
-  const [search, setSearch] = React.useState(false);
-  const [opennewGroup, setOpennewGroup] = React.useState(false);
-  const [notifications, setNotifications] = React.useState(false);
+  // const [mobile, setMobile] = React.useState(false);
+  // const [search, setSearch] = React.useState(false);
+  // const [opennewGroup, setOpennewGroup] = React.useState(false);
+  // const [notifications, setNotifications] = React.useState(false);
+
+  const {isSearch,isNewGroup,isNotification} = useSelector((state)=>state.misc)
+
 
   // FUNCTIONS
   const hadlemobileClick = () => {
-    setMobile((prev) => !prev);
+    dispatch(setIsMobile(true));
   };
+
   const handelOpenSearchDialog = () => {
-    setSearch((prev) => !prev);
+    dispatch(setIsSearch(true))
+    // setSearch((prev) => !prev);
   };
+
   const openNewGroup = () => {
-    setOpennewGroup((prev) => !prev);
+    dispatch(setIsNewGroup(true))
+    // setOpennewGroup((prev) => !prev);
   };
+
   const opennotification = () => {
-    setNotifications((prev) => !prev);
+    dispatch(setIsNotification(true))
+    // setNotifications((prev) => !prev);
   };
 
   // LOGOUTHANDLER
- const logouthandler = async () => {
-  try {
-    const { data } = await axios.post(
-      `${server}/api/v1/user/logout`,
-      {}, 
-      {
-        withCredentials: true, 
-      }
-    );
-    dispatch(userNotexist());
-    toast.success(data.message);
-  } catch (error) {
-    toast.error(error?.response?.data?.message || "something went wrong bro");
-  }
-};
+  const logouthandler = async () => {
+    try {
+      const { data } = await axios.post(
+        `${server}/api/v1/user/logout`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+      dispatch(userNotexist());
+      toast.success(data.message);
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "something went wrong bro");
+    }
+  };
 
-  // navigation 
+  // navigation
   const navigettogroup = () => naviget("/groups");
 
   return (
@@ -130,21 +138,21 @@ const Header = () => {
           </div>
         </div>
       </div>
-      {search && (
+      {isSearch && (
         <>
           <Suspense fallback={<BackDorp />}>
             <SearchDialog />
           </Suspense>
         </>
       )}
-      {opennewGroup && (
+      {isNewGroup && (
         <>
           <Suspense fallback={<BackDorp />}>
             <NewGroup />
           </Suspense>
         </>
       )}
-      {notifications && (
+      {isNotification && (
         <>
           <Suspense fallback={<BackDorp />}>
             <Notifications />

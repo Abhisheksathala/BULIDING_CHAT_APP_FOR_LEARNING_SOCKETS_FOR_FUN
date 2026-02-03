@@ -13,6 +13,8 @@ import { userChatData } from '../constants/sampleData';
 import { grey, blue } from '@mui/material/colors';
 import UserItem from '../shared/UserItem';
 import { useInputValidation } from '6pp';
+import { useDispatch, useSelector } from 'react-redux';
+import { setIsNewGroup } from '../../redux/reducers/misc';
 
 const NewGroup = () => {
   const users = userChatData ?? [];
@@ -21,6 +23,13 @@ const NewGroup = () => {
 
   const [members, setMembers] = React.useState(users);
   const [selectedMembers, setSelectedMembers] = React.useState([]);
+
+  const {isNewGroup} = useSelector((state)=>state.misc)
+
+  
+
+const dispatch =   useDispatch()
+  
 
   const selectMemberhandler = (id) => {
     // setMembers((prev) =>
@@ -33,10 +42,12 @@ const NewGroup = () => {
 
   const submitHandler = () => {};
 
-  const closeHandler = () => {};
+  const closeHandler = () => {
+    dispatch(setIsNewGroup(false))
+  };
 
   return (
-    <Dialog open={open} onClose={() => {closeHandler}}>
+    <Dialog open={isNewGroup} onClose={closeHandler}>
       <Stack
         p={{
           xs: '1rem',
