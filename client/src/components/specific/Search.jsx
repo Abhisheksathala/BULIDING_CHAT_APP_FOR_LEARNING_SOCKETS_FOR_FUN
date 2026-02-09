@@ -14,6 +14,10 @@ import { Search as SearchIcon } from "@mui/icons-material";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 
+// hook
+
+import { useAsyncMutation } from "../../hooks/hook";
+
 //
 import UserItem from "../shared/UserItem";
 import { setIsSearch } from "../../redux/reducers/misc";
@@ -34,11 +38,13 @@ const Search = () => {
   const searchInput = watch("search");
 
   const [users, setUsers] = React.useState([]);
-  const [sendFriendRequest] = useSendFriendRequestMutation();
+
+  const [sendFriendRequest, isloadingSendFriendRequest] = useAsyncMutation(
+    useSendFriendRequestMutation,
+  );
 
   const HandleSearch = async (formdata) => {
     console.log("search", formdata);
-
     if (formdata.search && formdata.search.trim()) {
       try {
         const result = await searchUser(formdata.search).unwrap();
@@ -50,24 +56,26 @@ const Search = () => {
   };
 
   const addFriendHandler = async (id) => {
-    try {
-      const res = await sendFriendRequest({ userId: id });
+    // try {
+    //   const res = await sendFriendRequest({ userId: id });
 
-      if (res?.data) {
-        toast.success("Friend request sent");
-        console.log(res?.data);
-      }else{
-         const message = error?.response?.data?.message || res.error.data.message;
-         toast.error(message);
-      }
-    } catch (error) {
-      console.log(error);
-      const message = error?.response?.data?.message || "Something went wrong";
-      toast.error(message);
-    }
+    //   if (res?.data) {
+    //     toast.success("Friend request sent");
+    //     console.log(res?.data);
+    //   }else{
+    //       const message = error?.response?.data?.message || res.error.data.message;
+    //       toast.error(message);
+    //   }
+    // } catch (error) {
+    //   console.log(error);
+    //   const message = error?.response?.data?.message || "Something went wrong";
+    //   toast.error(message);
+    // }
+
+   await sendFriendRequest("sending friend request...", { userId: id });
   };
 
-  const isloadingSendFriendRequest = false;
+  // const isloadingSendFriendRequest = false;
 
   const { isSearch } = useSelector((state) => state.misc);
 

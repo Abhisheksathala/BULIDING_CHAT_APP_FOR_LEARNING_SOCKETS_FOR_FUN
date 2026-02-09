@@ -6,8 +6,13 @@ import {
   CalendarMonth as CalendarIcon,
 } from '@mui/icons-material';
 import moment from 'moment';
+import { useSelector } from 'react-redux';
+import { transformImage } from '../lib/features';
 
 const Profile = () => {
+
+  const { user } = useSelector((state) => state.auth);
+ 
   return (
     <Stack
       className="bg-gray-100 h-full border-l-2 flex items-center  border-gray-300"
@@ -23,24 +28,25 @@ const Profile = () => {
           objectFit: 'contain',
           mb: 2,
         }}
+        src={transformImage(user?.avater?.url)}
       />
 
       <ProfileCard
         heading="Bio"
-        text="dsad hkashd ajdhk jkhasdkhk jkhsdkaj"
+        text={user?.bio}
         icon={<CalendarIcon />}
       />
 
       <ProfileCard
         heading="Username"
-        text="dsad hkashd ajdhk jkhasdkhk jkhsdkaj"
+        text={user?.name}
         icon={<UserNameIcon />}
       />
 
       <ProfileCard heading="Face" text="dsad hkashd ajdhk jkhasdkhk jkhsdkaj" icon={<FaceIcon />} />
       <ProfileCard
         heading="joined"
-        text={moment('2025-05-04T18:30:00.000Z').fromNow()}
+        text={moment(user?.createdAt).fromNow()}
         icon={<CalendarIcon />}
       />
     </Stack>

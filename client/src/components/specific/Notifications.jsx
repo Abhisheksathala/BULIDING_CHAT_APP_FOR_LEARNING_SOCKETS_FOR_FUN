@@ -1,64 +1,93 @@
-import React, { memo } from 'react';
-import { Dialog, Stack, DialogTitle, Typography, ListItem, Avatar, Button } from '@mui/material';
-import { grey,blue } from '@mui/material/colors';
-import { useDispatch, useSelector } from 'react-redux';
-import { setIsNotification } from '../../redux/reducers/misc';
+import React, { memo } from "react";
+import {
+  Dialog,
+  Stack,
+  DialogTitle,
+  Typography,
+  ListItem,
+  Avatar,
+  Button,
+} from "@mui/material";
+import { grey, blue } from "@mui/material/colors";
+import { useDispatch, useSelector } from "react-redux";
+import { setIsNotification } from "../../redux/reducers/misc";
+import { useAcceptFriendRequestMutation, useGetnotificationsQuery } from "../../redux/api/api";
+import { useErrors } from "../../hooks/hook";
 
 const Notifications = () => {
+ 
+
+  // const [notifications, setNotifications] = React.useState([
+  //   {
+  //     sender: {
+  //       avatar: "https://via.placeholder.com/40",
+  //       name: "Abhi",
+  //       _id: "2",
+  //     },
+  //     _id: "1",
+  //   },
+  //   {
+  //     sender: {
+  //       avatar: "https://via.placeholder.com/40",
+  //       name: "Abhi",
+  //       _id: "2",
+  //     },
+  //     _id: "2",
+  //   },
+  // ]);
+ 
+ 
+  const { isLoading, data, error, isError } = useGetnotificationsQuery();
+
+  const [acceptRequest] = useAcceptFriendRequestMutation()
 
 
-  const [notifications, setNotifications] = React.useState([
-    {
-      sender: {
-        avatar: 'https://via.placeholder.com/40',
-        name: 'Abhi',
-        _id: '2',
-      },
-      _id: '1',
-    },
-    {
-      sender: {
-        avatar: 'https://via.placeholder.com/40',
-        name: 'Abhi',
-        _id: '2',
-      },
-      _id: '1',
-    },
-  ]);
 
-  const dishpatch= useDispatch()
+  useErrors([{ error, isError }]);
 
-  const {isNotification} = useSelector((state)=>state.misc)
+  const dishpatch = useDispatch();
+
+  const { isNotification } = useSelector((state) => state.misc);
 
   const FriendRequestHandler = ({ _id, accept }) => {
-    console.log('Friend Request:', { _id, accept });
+    console.log("Friend Request:", { _id, accept });
   };
 
-  const handlenotitifcationclose = ()=>{
-    dishpatch(setIsNotification(false))
-  }
+  const handlenotitifcationclose = () => {
+    dishpatch(setIsNotification(false));
+  };
 
   return (
     <Dialog open={isNotification} onClose={handlenotitifcationclose}>
       <Stack
         p={{
-          xs: '1.5rem',
-          sm: '2rem',
+          xs: "1.5rem",
+          sm: "2rem",
         }}
         sx={{
-          width: { xs: '22rem', sm: '32rem' },
+          width: { xs: "22rem", sm: "32rem" },
         }}
       >
         <DialogTitle>Notifications</DialogTitle>
-
-        {notifications && notifications.length > 0 ? (
-          <>
-            {notifications.map(({ sender, _id }) => (
-              <NotifictionItem key={_id} sender={sender} _id={_id} handler={FriendRequestHandler} />
-            ))}
-          </>
+        {isLoading ? (
+          "loading..."
         ) : (
-          <Typography textAlign="center">0 Notifications</Typography>
+          <>
+            {data && data?.allrequests.length > 0  ? (
+              <>
+                {data.allrequests.map(({ _id, sender }) => (
+                  <NotifictionItem
+                    key={_id}
+                    sender={sender}
+                    _id={_id}
+                    handler={FriendRequestHandler}
+                  />
+                ))}
+              </>
+            ) : (
+              <Typography textAlign="center">0 Notifications</Typography>
+            )}
+          </>
         )}
       </Stack>
     </Dialog>
@@ -75,23 +104,23 @@ const NotifictionItem = memo(({ sender, _id, handler }) => {
           variant="body1"
           sx={{
             flexGrow: 1,
-            display: '-webkit-box',
+            display: "-webkit-box",
             WebkitLineClamp: 1,
-            WebkitBoxOrient: 'vertical',
-            overflow: 'hidden',
-            width: '100%',
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+            width: "100%",
           }}
         >
           {`${sender.name} sent you a friend request`}
         </Typography>
 
         {/* Buttons section */}
-        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1}>
+        <Stack direction={{ xs: "column", sm: "row" }} spacing={1}>
           <Button
             sx={{
-              color: 'white',
+              color: "white",
               bgcolor: "blue",
-              '&:hover': {
+              "&:hover": {
                 backgroundColor: blue[800],
               },
             }}
@@ -102,9 +131,9 @@ const NotifictionItem = memo(({ sender, _id, handler }) => {
 
           <Button
             sx={{
-              color: 'black',
+              color: "black",
               backgroundColor: grey[300],
-              '&:hover': {
+              "&:hover": {
                 backgroundColor: grey[400],
               },
             }}

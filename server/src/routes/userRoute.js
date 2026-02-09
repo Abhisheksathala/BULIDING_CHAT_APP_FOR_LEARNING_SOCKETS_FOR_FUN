@@ -6,7 +6,7 @@ import {
   getUser,
   logout,
   searchUser,
-   sendFriendrequest,acceptFriendrequest,getallnotification,
+   sendFriendrequest,acceptFriendrequest,getallnotification,getMyFriends,
   deleteUser,
   updateUser,
 
@@ -27,7 +27,10 @@ userRouter.get('/getuser', isAuthenticated, getUser);
 userRouter.get('/searchuser', isAuthenticated, searchUser);
 userRouter.put("/sendrequest",sendrequestvalidater(),validateHanlder,isAuthenticated,sendFriendrequest)
 userRouter.put("/accept-request",acceptRequestValidator(),validateHanlder,isAuthenticated,acceptFriendrequest)
-userRouter.get("/get-request",isAuthenticated,getallnotification)
+// userRouter.get("/get-request",isAuthenticated,getallnotification)
+userRouter.get("/get-notification",isAuthenticated,getallnotification)
+
+userRouter.get("/get-MyFriends",isAuthenticated,getMyFriends)
 
 
 

@@ -18,7 +18,7 @@ import { setIsMobile } from "../../redux/reducers/misc.js";
 const AppLayout = (WrappedComponent) => {
   return (props) => {
     const { isLoading, data, isError, error,refetch } = useMyChatsQuery("");
-    // console.log(data);
+ 
 
     useErrors([{ isError, error }]);
 
@@ -30,6 +30,7 @@ const AppLayout = (WrappedComponent) => {
     const dispatch = useDispatch();
 
     const { isMobile } = useSelector((state) => state.misc);
+    
 
     const handleMobileClose = () => {
       dispatch(setIsMobile(false));
@@ -82,7 +83,7 @@ const AppLayout = (WrappedComponent) => {
               <WrappedComponent {...props} />
             </div>
             <div className=" h-screen w-full hidden md:block">
-              <Profile />
+              <Profile  />
             </div>
           </div>
         </div>
