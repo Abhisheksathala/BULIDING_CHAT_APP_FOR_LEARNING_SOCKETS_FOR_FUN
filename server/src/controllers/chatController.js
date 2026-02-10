@@ -699,7 +699,7 @@ export const getchatdetails = async (req, res) => {
 export const renamegroup = async (req, res) => {
   try {
     // 1. Extract chat ID and new name from request
-    const { chatId, name } = req.body;
+    const { chatId, name } = req.qurey;
     const userId = req.user;
 
     // 2. Validate inputs
@@ -762,7 +762,7 @@ export const renamegroup = async (req, res) => {
  */
 export const deletechatdetails = async (req, res) => {
   try {
-    const { chatId } = req.body;
+    const { chatId } = req.query;
     const userId = req.user;
 
     // 1. Validate inputs

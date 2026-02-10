@@ -10,6 +10,7 @@ import { sampleMessages } from "../components/constants/sampleData";
 import MessageComponent from "../components/shared/MessageComponent";
 import { getSocket } from "../socket";
 import { NEW_MESSAGE } from "../components/constants/events";
+import { useChatDetailsQuery } from "../redux/api/api";
 
 
 const user = {
@@ -17,15 +18,18 @@ const user = {
   name: "abhishek",
 };
 
-const Chat = ({chatId,members}) => {
+const Chat = ({chatId}) => {
   const ContainerRef = React.useRef(null);
   const FilemenuRef = React.useRef(null);
   const socket = getSocket();
 
-
+const {isLoading,error,data,isError} = useChatDetailsQuery({chatId,skip:!chatId})
  
 
   const [message, setMessages] = useState();
+
+
+  const members = data?.chat?.members
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -36,7 +40,7 @@ const Chat = ({chatId,members}) => {
     setMessages("");
   };
 
-  return (
+  return isLoading ? "loading" : (
     <Stack
       className="relative"
       height="100%"
