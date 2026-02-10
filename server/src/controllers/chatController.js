@@ -1,13 +1,18 @@
 // Import event constants and essential modules
-import { ALERT, REFEATCH_CHATS, NEW_MESSAGE_ALERT, NEW_ATTACHMENT } from '../constants/events.js';
+import {
+  ALERT,
+  REFEATCH_CHATS,
+  NEW_MESSAGE_ALERT,
+  NEW_ATTACHMENT,
+} from "../constants/events.js";
 // Helper to find the "other member" in one-to-one chats
-import { getothermember } from '../helpers/Hpelerchat.js';
+import { getothermember } from "../helpers/Hpelerchat.js";
 // Mongoose models for chats, users, and messages
-import chatModel from '../models/chatModel.js';
-import UserModel from '../models/userModel.js';
-import messageModel from '../models/messageModel.js';
+import chatModel from "../models/chatModel.js";
+import UserModel from "../models/userModel.js";
+import messageModel from "../models/messageModel.js";
 // Utility to emit socket events and delete files from cloudinary
-import { emitEvent, deletfilesfromclodinary } from '../utils/features.js';
+import { emitEvent, deletfilesfromclodinary } from "../utils/features.js";
 
 /**
  * Create a NEW group chat with detailed explanatory comments
@@ -17,13 +22,15 @@ export const newGroupChat = async (req, res) => {
     const { name, members } = req.body;
 
     if (!name || !members) {
-      return res.status(400).json({ message: 'Name and members are required', success: false });
+      return res
+        .status(400)
+        .json({ message: "Name and members are required", success: false });
     }
 
     if (members.length < 2) {
       // Why 2? Because a meaningful group chat needs at least 3 people: 2 others + creator
       return res.status(400).json({
-        message: 'At least 2 members are required for a group chat',
+        message: "At least 2 members are required for a group chat",
         success: false,
       });
     }
@@ -33,7 +40,9 @@ export const newGroupChat = async (req, res) => {
 
     // 5. Validate creator is authenticated
     if (!creator) {
-      return res.status(401).json({ message: 'User not authenticated', success: false });
+      return res
+        .status(401)
+        .json({ message: "User not authenticated", success: false });
     }
 
     // 6. Add the creator to the members array, so the creator is part of the group too
@@ -78,12 +87,12 @@ export const newGroupChat = async (req, res) => {
     return res.status(200).json({
       success: true,
       chat: newchat,
-      message: 'Group chat created successfully',
+      message: "Group chat created successfully",
     });
   } catch (error) {
     // 12. Catch any errors, return 500 Internal Server Error with message
     return res.status(500).json({
-      message: error.message || 'Internal server error',
+      message: error.message || "Internal server error",
       success: false,
     });
   }
@@ -99,16 +108,18 @@ export const getmychats = async (req, res) => {
 
     // 2. If no userId, deny access
     if (!userId) {
-      return res.status(401).json({ message: 'User not authenticated', success: false });
+      return res
+        .status(401)
+        .json({ message: "User not authenticated", success: false });
     }
 
     // 3. Find all chats where this user is a member
     // Populate member details like name, avatar etc. for UI use
     const chat = await chatModel
       .find({ members: userId })
-      .populate('members', 'name avater username email');
+      .populate("members", "name avater username email");
 
-      console.log('chat',chat)
+    console.log("chat", chat);
 
     /*
             For example, userId = 'user123'
@@ -137,7 +148,9 @@ export const getmychats = async (req, res) => {
           // 7. Avatars:
           //    For groups - take first 3 member avatars,
           //    For personal chat - avatar of other member only (wrapped in array)
-          avater: groupChat ? members.slice(0, 3).map((mem) => mem.avater) : [otherMember.avater],
+          avater: groupChat
+            ? members.slice(0, 3).map((mem) => mem.avater)
+            : [otherMember.avater],
 
           creator,
 
@@ -156,21 +169,24 @@ export const getmychats = async (req, res) => {
       },
     );
 
-    console.log("transformedChats",transformedChats)
+    console.log("transformedChats", transformedChats);
 
     // 10. Return the transformed chats with success message
     return res.status(200).json({
       success: true,
       chats: transformedChats,
-      message: 'Chats fetched successfully',
+      message: "Chats fetched successfully",
     });
   } catch (error) {
-    console.error('Error fetching chats:', error);
+    console.error("Error fetching chats:", error);
 
     // 11. Error fallback response
     return res
       .status(500)
-      .json({ message: error.message || 'Internal server error', success: false });
+      .json({
+        message: error.message || "Internal server error",
+        success: false,
+      });
   }
 };
 
@@ -184,7 +200,9 @@ export const getmygroups = async (req, res) => {
 
     // 2. Authentication check
     if (!userId) {
-      return res.status(401).json({ message: 'User not authenticated', success: false });
+      return res
+        .status(401)
+        .json({ message: "User not authenticated", success: false });
     }
 
     // 3. Find all groups where user is member AND user is creator(admin)
@@ -194,11 +212,13 @@ export const getmygroups = async (req, res) => {
         groupChat: true,
         creator: userId,
       })
-      .populate('members', 'name avater username email');
+      .populate("members", "name avater username email");
 
     // 4. If no groups found, return 404
     if (!chat || chat.length === 0) {
-      return res.status(404).json({ message: 'No group chats found', success: false });
+      return res
+        .status(404)
+        .json({ message: "No group chats found", success: false });
     }
 
     // 5. Map groups to minimal info for frontend
@@ -213,13 +233,16 @@ export const getmygroups = async (req, res) => {
     return res.status(200).json({
       success: true,
       group,
-      message: 'Group chats fetched successfully',
+      message: "Group chats fetched successfully",
     });
   } catch (error) {
-    console.error('Error fetching group chats:', error);
+    console.error("Error fetching group chats:", error);
     return res
       .status(500)
-      .json({ message: error.message || 'Internal server error', success: false });
+      .json({
+        message: error.message || "Internal server error",
+        success: false,
+      });
   }
 };
 
@@ -235,31 +258,48 @@ export const addmember = async (req, res) => {
     const { chatId, members } = req.body;
 
     // 3. Validate inputs
-    if (!userId) return res.status(401).json({ message: 'User not authenticated', success: false });
+    if (!userId)
+      return res
+        .status(401)
+        .json({ message: "User not authenticated", success: false });
     if (!members || members.length === 0)
-      return res.status(400).json({ message: 'Members are required', success: false });
+      return res
+        .status(400)
+        .json({ message: "Members are required", success: false });
 
     // 4. Find chat by ID
     const chat = await chatModel.findById(chatId);
-    if (!chat) return res.status(404).json({ message: 'Chat not found', success: false });
+    if (!chat)
+      return res
+        .status(404)
+        .json({ message: "Chat not found", success: false });
 
     // 5. Ensure chat is a group, not personal
     if (!chat.groupChat)
-      return res.status(404).json({ message: 'This is not a group chat', success: false });
+      return res
+        .status(404)
+        .json({ message: "This is not a group chat", success: false });
 
     // 6. Only creator can add members
     if (chat.creator.toString() !== userId)
       return res
         .status(403)
-        .json({ message: 'You are not the creator of this group chat', success: false });
+        .json({
+          message: "You are not the creator of this group chat",
+          success: false,
+        });
 
     // 7. Validate each user to add actually exists by fetching from User collection
-    const allnewmembersPromise = members.map((id) => UserModel.findById(id, 'name'));
+    const allnewmembersPromise = members.map((id) =>
+      UserModel.findById(id, "name"),
+    );
     const allnewmembers = await Promise.all(allnewmembersPromise);
 
     // 8. If any member not found, error
     if (allnewmembers.includes(null))
-      return res.status(404).json({ message: 'One or more members not found', success: false });
+      return res
+        .status(404)
+        .json({ message: "One or more members not found", success: false });
 
     // 9. Filter only new unique members that are not already in the group
     const uniqueMembers = allnewmembers
@@ -279,7 +319,7 @@ export const addmember = async (req, res) => {
     // 11. Check group size limit (currently 100, but message says 10, so update as needed)
     if (chat.members.length > 100) {
       return res.status(400).json({
-        message: 'Group chat cannot have more than 100 members',
+        message: "Group chat cannot have more than 100 members",
         success: false,
       });
     }
@@ -288,7 +328,7 @@ export const addmember = async (req, res) => {
     const updatedChat = await chat.save();
 
     // 13. Prepare a user-friendly message including new member names
-    const allUsersName = allnewmembers.map((m) => m.name).join(', ');
+    const allUsersName = allnewmembers.map((m) => m.name).join(", ");
 
     // 14. Send alert to all chat members about added people
     emitEvent(
@@ -305,13 +345,16 @@ export const addmember = async (req, res) => {
     return res.status(200).json({
       success: true,
       chat: updatedChat,
-      message: 'Member added to group chat successfully',
+      message: "Member added to group chat successfully",
     });
   } catch (error) {
-    console.error('Error adding member:', error);
+    console.error("Error adding member:", error);
     return res
       .status(500)
-      .json({ message: error.message || 'Internal server error', success: false });
+      .json({
+        message: error.message || "Internal server error",
+        success: false,
+      });
   }
 };
 
@@ -325,28 +368,42 @@ export const removemembers = async (req, res) => {
 
     // 2. Find chat document to update
     const chat = await chatModel.findById(chatId);
-    if (!chat) return res.status(404).json({ message: 'Chat not found', success: false });
+    if (!chat)
+      return res
+        .status(404)
+        .json({ message: "Chat not found", success: false });
 
     // 3. Find user to be removed (for alert messages)
-    const userToRemove = await UserModel.findById(userIdToRemove, 'name');
-    if (!userToRemove) return res.status(404).json({ message: 'User not found', success: false });
+    const userToRemove = await UserModel.findById(userIdToRemove, "name");
+    if (!userToRemove)
+      return res
+        .status(404)
+        .json({ message: "User not found", success: false });
 
     // 4. Confirm this is a group chat
     if (!chat.groupChat)
-      return res.status(404).json({ message: 'This is not a group chat', success: false });
+      return res
+        .status(404)
+        .json({ message: "This is not a group chat", success: false });
 
     // 5. IMPORTANT: Check if *current requester* is creator (fix logic!):
     if (chat.creator.toString() !== req.user) {
       return res
         .status(403)
-        .json({ message: 'You are not the creator of this group chat', success: false });
+        .json({
+          message: "You are not the creator of this group chat",
+          success: false,
+        });
     }
 
     // 6. Prevent leaving less than 3 members in the group after removal
     if (chat.members.length <= 3) {
       return res
         .status(400)
-        .json({ message: 'Group chat cannot have less than 3 members', success: false });
+        .json({
+          message: "Group chat cannot have less than 3 members",
+          success: false,
+        });
     }
 
     // 7. Filter out the member to be removed
@@ -371,13 +428,16 @@ export const removemembers = async (req, res) => {
     return res.status(200).json({
       success: true,
       chat: updatedChat,
-      message: 'Member removed from group chat successfully',
+      message: "Member removed from group chat successfully",
     });
   } catch (error) {
-    console.error('Error removing member:', error);
+    console.error("Error removing member:", error);
     return res
       .status(500)
-      .json({ message: error.message || 'Internal server error', success: false });
+      .json({
+        message: error.message || "Internal server error",
+        success: false,
+      });
   }
 };
 
@@ -392,11 +452,16 @@ export const leavegroup = async (req, res) => {
 
     // 2. Find chat document
     const chat = await chatModel.findById(chatId);
-    if (!chat) return res.status(404).json({ message: 'Chat not found', success: false });
+    if (!chat)
+      return res
+        .status(404)
+        .json({ message: "Chat not found", success: false });
 
     // 3. Must be a group chat
     if (!chat.groupChat)
-      return res.status(404).json({ message: 'This is not a group chat', success: false });
+      return res
+        .status(404)
+        .json({ message: "This is not a group chat", success: false });
 
     // 4. Remove current user from members list
     const remainingMembers = chat.members.filter(
@@ -413,8 +478,11 @@ export const leavegroup = async (req, res) => {
     chat.members = remainingMembers;
 
     // 7. Find current user info (for alert message)
-    const user = await UserModel.findById(userId, 'name');
-    if (!user) return res.status(404).json({ message: 'User not found', success: false });
+    const user = await UserModel.findById(userId, "name");
+    if (!user)
+      return res
+        .status(404)
+        .json({ message: "User not found", success: false });
 
     // 8. Save chat document
     const updatedChat = await chat.save();
@@ -429,13 +497,16 @@ export const leavegroup = async (req, res) => {
     return res.status(200).json({
       success: true,
       chat: updatedChat,
-      message: 'You have left the group chat successfully',
+      message: "You have left the group chat successfully",
     });
   } catch (error) {
-    console.error('Error leaving group chat:', error);
+    console.error("Error leaving group chat:", error);
     return res
       .status(500)
-      .json({ message: error.message || 'Internal server error', success: false });
+      .json({
+        message: error.message || "Internal server error",
+        success: false,
+      });
   }
 };
 
@@ -449,34 +520,47 @@ export const sendattachment = async (req, res) => {
     const { chatId } = req.body;
     const userId = req.user;
 
-  // 4. Get files uploaded (from multer or similar)
+    // 4. Get files uploaded (from multer or similar)
     const files = req.files || [];
 
+    if (files.length < 1)
+      return res
+        .status(400)
+        .json({ success: false, message: "please upload attachments" });
 
-    if(files.length < 1) return res.status(400).json({success:false,message:"please upload attachments"})
-
-// here we need add only 5 files he can send thast it
+    // here we need add only 5 files he can send thast it
 
     // 2. Validate inputs
-    if (!chatId) return res.status(400).json({ message: 'Chat id is required', success: false });
-    if (!userId) return res.status(401).json({ message: 'User not authenticated', success: false });
-
-
+    if (!chatId)
+      return res
+        .status(400)
+        .json({ message: "Chat id is required", success: false });
+    if (!userId)
+      return res
+        .status(401)
+        .json({ message: "User not authenticated", success: false });
 
     // 3. Find chat and user data
     const chat = await chatModel.findById(chatId);
-    if (!chat) return res.status(404).json({ message: 'Chat not found', success: false });
+    if (!chat)
+      return res
+        .status(404)
+        .json({ message: "Chat not found", success: false });
 
-    const user = await UserModel.findById(userId).select('name');
-    if (!user) return res.status(404).json({ message: 'User not found', success: false });
-
-
+    const user = await UserModel.findById(userId).select("name");
+    if (!user)
+      return res
+        .status(404)
+        .json({ message: "User not found", success: false });
 
     // 5. Check if any files were uploaded
     if (files.length < 1) {
       return res
         .status(400)
-        .json({ message: 'No files uploaded please upload files', success: false });
+        .json({
+          message: "No files uploaded please upload files",
+          success: false,
+        });
     }
 
     /*
@@ -492,7 +576,7 @@ export const sendattachment = async (req, res) => {
 
     // 7. Create message object for database saving
     const messageForDB = {
-      content: '', // No text content for attachment-only message
+      content: "", // No text content for attachment-only message
       attachments: attachments,
       sender: userId,
       chat: chatId,
@@ -526,12 +610,19 @@ export const sendattachment = async (req, res) => {
     // 12. Respond success
     return res
       .status(200)
-      .json({ message: 'Attachment sent successfully', success: true, messages });
+      .json({
+        message: "Attachment sent successfully",
+        success: true,
+        messages,
+      });
   } catch (error) {
-    console.error('Error sending attachment:', error);
+    console.error("Error sending attachment:", error);
     return res
       .status(500)
-      .json({ message: error.message || 'Internal server error', success: false });
+      .json({
+        message: error.message || "Internal server error",
+        success: false,
+      });
   }
 };
 
@@ -540,46 +631,65 @@ export const sendattachment = async (req, res) => {
  */
 export const getchatdetails = async (req, res) => {
   try {
-    const { chatId, populate } = req.body;
+    const { chatId, populate } = req.query;;
     const userId = req.user;
 
     // 1. Validate inputs
-    if (!chatId) return res.status(400).json({ message: 'Chat id is required', success: false });
-    if (!userId) return res.status(401).json({ message: 'User not authenticated', success: false });
+    if (!chatId)
+      return res
+        .status(400)
+        .json({ message: "Chat id is required", success: false });
+    if (!userId)
+      return res
+        .status(401)
+        .json({ message: "User not authenticated", success: false });
 
     if (populate) {
       /*
-               a. Populate members with detailed fields to get richer info for frontend
-               .ean() returlns plain JS objects instead of Mongoose documents for faster processing
+                a. Populate members with detailed fields to get richer info for frontend
+                .ean() returlns plain JS objects instead of Mongoose documents for faster processing
             */
       const chat = await chatModel
         .findById(chatId)
-        .populate('members', 'name avater username email')
+        .populate("members", "name avater username email")
         .lean();
 
-      if (!chat) return res.status(404).json({ message: 'Chat not found', success: false });
+      if (!chat)
+        return res
+          .status(404)
+          .json({ message: "Chat not found", success: false });
 
       // b. Normalize avatar property: it can be string or an object with a URL property
       chat.members = chat.members.map(({ _id, name, avatar }) => ({
         _id,
         name,
-        avatar: avatar?.url || avatar || '',
+        avatar: avatar?.url || avatar || "",
       }));
 
       // 2. Return chat with populated members
-      return res.status(200).json({ success: true, chat, message: 'Chat found successfully' });
+      return res
+        .status(200)
+        .json({ success: true, chat, message: "Chat found successfully" });
     } else {
       // 3. Simple find without populating members
       const chat = await chatModel.findById(chatId);
-      if (!chat) return res.status(404).json({ message: 'Chat not found', success: false });
+      if (!chat)
+        return res
+          .status(404)
+          .json({ message: "Chat not found", success: false });
 
-      return res.status(200).json({ success: true, chat, message: 'Chat found successfully' });
+      return res
+        .status(200)
+        .json({ success: true, chat, message: "Chat found successfully" });
     }
   } catch (error) {
-    console.error('Error getting chat details:', error);
+    console.error("Error getting chat details:", error);
     return res
       .status(500)
-      .json({ message: error.message || 'Internal server error', success: false });
+      .json({
+        message: error.message || "Internal server error",
+        success: false,
+      });
   }
 };
 
@@ -593,23 +703,36 @@ export const renamegroup = async (req, res) => {
     const userId = req.user;
 
     // 2. Validate inputs
-    if (!chatId) return res.status(400).json({ message: 'Chat id is required', success: false });
+    if (!chatId)
+      return res
+        .status(400)
+        .json({ message: "Chat id is required", success: false });
     if (!name || name.length < 1)
-      return res.status(400).json({ message: 'Chat name is required', success: false });
+      return res
+        .status(400)
+        .json({ message: "Chat name is required", success: false });
 
     // 3. Find chat document
     const chat = await chatModel.findById(chatId);
-    if (!chat) return res.status(404).json({ message: 'Chat not found', success: false });
+    if (!chat)
+      return res
+        .status(404)
+        .json({ message: "Chat not found", success: false });
 
     // 4. Ensure chat is a group
     if (!chat.groupChat)
-      return res.status(404).json({ message: 'This is not a group chat', success: false });
+      return res
+        .status(404)
+        .json({ message: "This is not a group chat", success: false });
 
     // 5. Ensure only creator can rename
     if (chat.creator.toString() !== userId)
       return res
         .status(403)
-        .json({ message: 'You are not the creator of this chat', success: false });
+        .json({
+          message: "You are not the creator of this chat",
+          success: false,
+        });
 
     // 6. Update chat name and save
     chat.name = name;
@@ -618,12 +741,19 @@ export const renamegroup = async (req, res) => {
     // 7. Respond success with updated chat
     return res
       .status(200)
-      .json({ success: true, chat: updatedChat, message: 'Chat renamed successfully' });
+      .json({
+        success: true,
+        chat: updatedChat,
+        message: "Chat renamed successfully",
+      });
   } catch (error) {
-    console.error('Error renaming group chat:', error);
+    console.error("Error renaming group chat:", error);
     return res
       .status(500)
-      .json({ message: error.message || 'Internal server error', success: false });
+      .json({
+        message: error.message || "Internal server error",
+        success: false,
+      });
   }
 };
 
@@ -636,11 +766,17 @@ export const deletechatdetails = async (req, res) => {
     const userId = req.user;
 
     // 1. Validate inputs
-    if (!chatId) return res.status(400).json({ message: 'Chat id is required', success: false });
+    if (!chatId)
+      return res
+        .status(400)
+        .json({ message: "Chat id is required", success: false });
 
     // 2. Find chat doc
     const chat = await chatModel.findById(chatId);
-    if (!chat) return res.status(404).json({ message: 'Chat not found', success: false });
+    if (!chat)
+      return res
+        .status(404)
+        .json({ message: "Chat not found", success: false });
 
     const members = chat.members;
 
@@ -649,14 +785,20 @@ export const deletechatdetails = async (req, res) => {
     if (!chat.groupChat && chat.creator.toString() !== userId) {
       return res
         .status(403)
-        .json({ message: 'You are not the creator of this chat', success: false });
+        .json({
+          message: "You are not the creator of this chat",
+          success: false,
+        });
     }
 
     // For group chat, user must at least be a member
     if (chat.groupChat && !members.includes(userId)) {
       return res
         .status(403)
-        .json({ message: 'You are not a member of this group chat', success: false });
+        .json({
+          message: "You are not a member of this group chat",
+          success: false,
+        });
     }
 
     // 4. Find all messages in the chat which have attachments (non-empty attachments array)
@@ -668,7 +810,9 @@ export const deletechatdetails = async (req, res) => {
     // 5. Collect all 'public_id's from attachments to delete from Cloudinary
     const public_ids = [];
     messagesWithAttachments.forEach((message) =>
-      message.attachments.forEach((attachment) => public_ids.push(attachment.public_id)),
+      message.attachments.forEach((attachment) =>
+        public_ids.push(attachment.public_id),
+      ),
     );
 
     // 6. Delete attachments from cloud storage if any
@@ -684,12 +828,17 @@ export const deletechatdetails = async (req, res) => {
     emitEvent(req, REFEATCH_CHATS, members);
 
     // 9. Respond success
-    return res.status(200).json({ success: true, message: 'Chat deleted successfully' });
+    return res
+      .status(200)
+      .json({ success: true, message: "Chat deleted successfully" });
   } catch (error) {
-    console.error('Error deleting chat details:', error);
+    console.error("Error deleting chat details:", error);
     return res
       .status(500)
-      .json({ message: error.message || 'Internal server error', success: false });
+      .json({
+        message: error.message || "Internal server error",
+        success: false,
+      });
   }
 };
 
@@ -713,10 +862,12 @@ export const getmessages = async (req, res) => {
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(resulte_per_page)
-      .populate('sender', 'name avater ')
+      .populate("sender", "name avater ")
       .lean();
 
-    const totalmessagesCount = await messageModel.countDocuments({ chat: chatId });
+    const totalmessagesCount = await messageModel.countDocuments({
+      chat: chatId,
+    });
 
     const totalpages = Math.ceil(totalmessagesCount / resulte_per_page) || 0;
 
@@ -726,9 +877,12 @@ export const getmessages = async (req, res) => {
       totalpages,
     });
   } catch (error) {
-    console.error('Error gettings messages:', error);
+    console.error("Error gettings messages:", error);
     return res
       .status(500)
-      .json({ message: error.message || 'Internal server error', success: false });
+      .json({
+        message: error.message || "Internal server error",
+        success: false,
+      });
   }
 };

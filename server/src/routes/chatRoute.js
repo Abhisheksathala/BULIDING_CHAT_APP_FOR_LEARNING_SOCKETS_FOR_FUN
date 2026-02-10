@@ -60,7 +60,7 @@ chatRouter.post(
 );
 
 chatRouter
-  .route('/chat-curd')
+  .route('/:chatId')
   .get(isAuthenticated, getchatdetails)
   .put(isAuthenticated, renamegroup)
   .delete(isAuthenticated, deletechatdetails);

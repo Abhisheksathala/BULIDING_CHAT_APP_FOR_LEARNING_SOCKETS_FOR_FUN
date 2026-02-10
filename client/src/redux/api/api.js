@@ -6,7 +6,7 @@ const api = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: `${server}/api/v1/`,
   }),
-  tagTypes: ["Chat","user"],
+  tagTypes: ["Chat", "user"],
   endpoints: (builder) => ({
     // -----my chat
     myChats: builder.query({
@@ -24,37 +24,50 @@ const api = createApi({
       }),
       providesTags: ["user"],
     }),
-    // ----send request 
-    sendFriendRequest:builder.mutation({
-      query:(data)=>({
-        url:`user/sendrequest`,
-        method:"Put",
-        credentials:"include",
-        body:data
+    // ----send request
+    sendFriendRequest: builder.mutation({
+      query: (data) => ({
+        url: `user/sendrequest`,
+        method: "Put",
+        credentials: "include",
+        body: data,
       }),
-      invalidatesTags:["user"]
+      invalidatesTags: ["user"],
     }),
 
     // ----get notifications
-    getnotifications:builder.query({
-      query:()=>({
-        url:`user/get-notification`,
-        credentials:"include",
+    getnotifications: builder.query({
+      query: () => ({
+        url: `user/get-notification`,
+        credentials: "include",
       }),
-      keepUnusedDataFor:0
+      keepUnusedDataFor: 0,
     }),
 
-    // acceptFriendReuest 
+    // acceptFriendReuest
 
     acceptFriendRequest: builder.mutation({
-      query:(data)=>({
-        url:"user/accept-request",
-        method:"Put",
-        credentials:"include",
-        body:data
+      query: (data) => ({
+        url: "user/accept-request",
+        method: "Put",
+        credentials: "include",
+        body: data,
       }),
-      invalidateTags:["Chat"]
-    })
+      invalidateTags: ["Chat"],
+    }),
+
+    // chatDetails APi
+    chatDetails: builder.query({
+      query: ({ chatId, populate = false }) => {
+        let url = `chat/${chatId}`;
+        if (populate) url += "?populate=true";
+        return {
+          url,
+          credentials: "include",
+        };
+      },
+      providesTags: ["chat"],
+    }),
 
     // invalidateTags:["Chat"]
   }),
@@ -64,4 +77,11 @@ export default api;
 
 console.log(api);
 
-export const { useMyChatsQuery , useLazySearchUserQuery,useSendFriendRequestMutation,useGetnotificationsQuery ,useAcceptFriendRequestMutation} = api;
+export const {
+  useMyChatsQuery,
+  useLazySearchUserQuery,
+  useSendFriendRequestMutation,
+  useGetnotificationsQuery,
+  useAcceptFriendRequestMutation,
+  useChatDetailsQuery,
+} = api;

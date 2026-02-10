@@ -14,10 +14,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { Drawer } from "@mui/material";
 import { setIsMobile } from "../../redux/reducers/misc.js";
 import { getSocket } from "../../socket.jsx";
+import { useParams } from "react-router-dom";
 
 // Higher Order Component
 const AppLayout = (WrappedComponent) => {
   return (props) => {
+
+     const params = useParams()
+  const chatId = params.id
+
+
     const { isLoading, data, isError, error,refetch } = useMyChatsQuery("");
     useErrors([{ isError, error }]);
     const handleDeleteChat = async (e, _id, groupChat) => {
@@ -65,7 +71,7 @@ const AppLayout = (WrappedComponent) => {
               ) : (
                 <ChatList
                   chats={data?.chats}
-                  chatId={"1"}
+                  chatId={chatId}
                   newMessagesAlert={[
                     {
                       chatId: "1",
@@ -77,7 +83,7 @@ const AppLayout = (WrappedComponent) => {
               )}
             </div>
             <div className="w-full h-full">
-              <WrappedComponent {...props} />
+              <WrappedComponent {...props} chatId={chatId} socket={socket}/>
             </div>
             <div className=" h-screen w-full hidden md:block">
               <Profile  />
