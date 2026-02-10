@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
-import { CHATTU_TOKEN } from "../constants/events";
-import UserModel from "../models/userModel";
+import { CHATTU_TOKEN } from "../constants/events.js";
+import UserModel from "../models/userModel.js";
 
 // Middleware to check if user is authenticated
 export const isAuthenticated = (req, res, next) => {
@@ -74,7 +74,7 @@ export const adminOnly = (req, res, next) => {
 export const socketAuthenticator = async (err, socket, next) => {
   try {
     if (err) return next(err);
-    const authtoken = socket.req.cookies[CHATTU_TOKEN];
+    const authtoken = socket.request.cookies[CHATTU_TOKEN];
     if (!authtoken)
       return next(new Error("plz login to access this route ", 401));
     const decodedData = jwt.verify(authtoken, process.env.JWT_SECRET);
