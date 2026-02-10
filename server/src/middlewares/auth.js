@@ -83,7 +83,7 @@ export const socketAuthenticator = async (err, socket, next) => {
     if(!user){
       return Error("no user Found")
     }
-    socket.user = await UserModel.findById(decodedData._id);
+    socket.user = user;
 
     return next();
   } catch (error) {
