@@ -75,7 +75,7 @@ const api = createApi({
 
 export default api;
 
-console.log(api);
+// console.log(api);
 
 export const {
   useMyChatsQuery,
