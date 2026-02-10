@@ -1,28 +1,35 @@
-import express from 'express';
-import 'dotenv/config';
-import { corsconfig } from './src/utils/corsconfig.js';
-import cookieParser from 'cookie-parser';
-import { errorhandler } from './src/middlewares/error.js';
-import {v2 as cloudinary} from "cloudinary"
-import { requestLogger, addTimeStamp } from './src/middlewares/globalerrorhandler.js';
-import { globalErrorhandler } from './src/middlewares/error.js';
+import express from "express";
+import "dotenv/config";
+import { corsconfig } from "./src/utils/corsconfig.js";
+import cookieParser from "cookie-parser";
+import { errorhandler } from "./src/middlewares/error.js";
+import { v2 as cloudinary } from "cloudinary";
+import {
+  requestLogger,
+  addTimeStamp,
+} from "./src/middlewares/globalerrorhandler.js";
+import { globalErrorhandler } from "./src/middlewares/error.js";
 // seeders
-import { createUser } from './src/seeders/seeders.js';
+import { createUser } from "./src/seeders/seeders.js";
 // import routes
-import userRouter from './src/routes/userRoute.js';
-import chatRouter from './src/routes/chatRoute.js';
-import AdminRouter from './src/routes/admin.js';
+import userRouter from "./src/routes/userRoute.js";
+import chatRouter from "./src/routes/chatRoute.js";
+import AdminRouter from "./src/routes/admin.js";
 
 // import server
-import { Server } from 'socket.io';
-import http from 'http';
-import { v4 as uuid } from 'uuid';
+import { Server } from "socket.io";
+import http from "http";
+import { v4 as uuid } from "uuid";
 
-import messageModel from "./src/models/messageModel.js"
+// model
+import messageModel from "./src/models/messageModel.js";
 
 // constants
-import { NEW_MESSAGE, NEW_MESSAGE_ALERT } from './src/constants/events.js';
-import { getSockets } from './src/helpers/Hpelerchat.js';
+import { NEW_MESSAGE, NEW_MESSAGE_ALERT } from "./src/constants/events.js";
+import { getSockets } from "./src/helpers/Hpelerchat.js";
+
+// import middlewares
+import { socketAuthenticator } from "./src/middlewares/auth.js";
 
 const app = express();
 export const server = http.createServer(app);
@@ -30,21 +37,27 @@ export const userSocketIDs = new Map();
 
 const io = new Server(server, {
   cors: {
-    origin: '*',
+    // origin: '*',
+    origin: ["http://localhost:5173", "http://localhost:4173"],
+    credentials: true,
   },
 });
 
-io.use((socket,next)=>{})
+io.use((socket, next) => {
+  cookieParser()(socket.request, socket.request.res, async (err) => {
+    await socketAuthenticator(err, socket, next);
+  });
+});
 
-io.on('connection', (socket) => {
+io.on("connection", (socket) => {
   const user = {
-    _id: 'asdsad',
-    name: 'nagmo',
+    _id: "asdsad",
+    name: "nagmo",
   };
 
   userSocketIDs.set(user._id.toString(), socket.id);
 
-  console.log(' a user connected', userSocketIDs);
+  console.log(" a user connected", userSocketIDs);
   socket.on(NEW_MESSAGE, async ({ chatId, members, message }) => {
     const messageForRealTime = {
       content: message,
@@ -63,39 +76,39 @@ io.on('connection', (socket) => {
       chat: chatId,
     };
 
-    const MembersSocket = getSockets(members)
+    const MembersSocket = getSockets(members);
 
-    io.to(MembersSocket).emit(NEW_MESSAGE,{
+    io.to(MembersSocket).emit(NEW_MESSAGE, {
       chatId,
-      message:messageForRealTime
-    })
-    io.to(MembersSocket).emit(NEW_MESSAGE_ALERT,{chatId})
+      message: messageForRealTime,
+    });
+    io.to(MembersSocket).emit(NEW_MESSAGE_ALERT, { chatId });
 
-  try {
-      await messageModel.create(messagefroDB)
-  } catch (error) {
-    console.log(error)
-  }
+    try {
+      await messageModel.create(messagefroDB);
+    } catch (error) {
+      console.log(error);
+    }
 
-    console.log('new message', messageForRealTime);
+    console.log("new message", messageForRealTime);
   });
-  socket.on('disconnect', () => {
-    console.log(' a user disconnected');
-    userSocketIDs.delete(user._id.toString())
+  socket.on("disconnect", () => {
+    console.log(" a user disconnected");
+    userSocketIDs.delete(user._id.toString());
   });
 });
 
 cloudinary.config({
-  cloud_name:process.env.CLOUD_NAME,
-  api_key:process.env.CLOUDINAIRY_API_KEY,
-  api_secret:process.env.CLOUDINARY_API_SECRET
-})
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUDINAIRY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 // apis
 app.use(corsconfig());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public'));
+app.use(express.static("public"));
 app.use(cookieParser());
 
 // error handler
@@ -109,9 +122,9 @@ app.use(addTimeStamp);
 app.use(globalErrorhandler);
 
 // routes
-app.use('/api/v1/user', userRouter);
-app.use('/api/v1/chat', chatRouter);
-app.use('/api/v1/admin', AdminRouter);
+app.use("/api/v1/user", userRouter);
+app.use("/api/v1/chat", chatRouter);
+app.use("/api/v1/admin", AdminRouter);
 
 export default app;
 

@@ -13,28 +13,25 @@ import { useErrors } from "../../hooks/hook.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { Drawer } from "@mui/material";
 import { setIsMobile } from "../../redux/reducers/misc.js";
+import { getSocket } from "../../socket.jsx";
 
 // Higher Order Component
 const AppLayout = (WrappedComponent) => {
   return (props) => {
     const { isLoading, data, isError, error,refetch } = useMyChatsQuery("");
- 
-
     useErrors([{ isError, error }]);
-
     const handleDeleteChat = async (e, _id, groupChat) => {
       e.preventDefault();
       console.log("Deleting chat:", _id, groupChat);
     };
-
     const dispatch = useDispatch();
-
     const { isMobile } = useSelector((state) => state.misc);
-    
-
     const handleMobileClose = () => {
       dispatch(setIsMobile(false));
     };
+
+    const socket = getSocket()
+    console.log(socket.id)
 
     return (
       <>

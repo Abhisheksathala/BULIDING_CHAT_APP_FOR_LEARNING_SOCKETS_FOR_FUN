@@ -6,6 +6,7 @@ const corsconfig = () => {
     origin: (origin, callback) => {
       const allowedOrigins = [
         'http://localhost:5173', //local dev
+          'http://localhost:4173',
         // "https://yourcustomdomain.com", //production domain
       ];
 

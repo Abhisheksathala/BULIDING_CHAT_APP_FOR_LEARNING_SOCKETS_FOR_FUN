@@ -269,15 +269,16 @@ export const acceptFriendrequest = async (req, res) => {
         message: "Request deleted successfully",
       });
     }
-    const memebers = [receiver.sender._id, receiver.receiver._id];
+    const members = [request.sender._id, request.receiver._id];
+
     await Promise.all([
       chatModel.create({
-        memebers,
+        members,
         name: `${request.sender.name} ${request.receiver.name}`,
       }),
       request.deleteOne(),
     ]);
-    emitEvent(req, REFEATCH_CHATS, memebers);
+    emitEvent(req, REFEATCH_CHATS, members);
     return res.status(200).json({
       message: "Friend Request Accepted",
       success: true,

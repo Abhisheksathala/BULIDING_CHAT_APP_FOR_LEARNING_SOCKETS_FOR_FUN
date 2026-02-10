@@ -1,17 +1,21 @@
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
+import { CHATTU_TOKEN } from "../constants/events";
+import UserModel from "../models/userModel";
 
 // Middleware to check if user is authenticated
 export const isAuthenticated = (req, res, next) => {
   try {
     // Check for token in cookies or authorization header (Bearer token)
-    let token = req.cookies['chattu-token'];
+    let token = req.cookies["chattu-token"];
     if (!token) {
-      token = req.headers.authorization?.split(' ')[1]; // Extract token from Bearer header
+      token = req.headers.authorization?.split(" ")[1]; // Extract token from Bearer header
     }
     if (!token) {
-      return res.status(401).json({ message: 'Authentication token is required', success: false });
+      return res
+        .status(401)
+        .json({ message: "Authentication token is required", success: false });
     }
-    console.log('token:', token);
+    console.log("token:", token);
     // Verify the token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
@@ -19,44 +23,70 @@ export const isAuthenticated = (req, res, next) => {
 
     next();
   } catch (error) {
-    console.error('Authentication error:', error.message);
-    return res.status(401).json({ message: 'Invalid or expired token', success: false });
+    console.error("Authentication error:", error.message);
+    return res
+      .status(401)
+      .json({ message: "Invalid or expired token", success: false });
   }
 };
 
 export const adminOnly = (req, res, next) => {
   try {
     // Check for token in cookies or authorization header (Bearer token)
-    let token = req.cookies['chattu-admin-token'];
+    let token = req.cookies["chattu-admin-token"];
     if (!token) {
-      token = req.headers.authorization?.split(' ')[1]; // Extract token from Bearer header
+      token = req.headers.authorization?.split(" ")[1]; // Extract token from Bearer header
     }
     if (!token) {
-      return res.status(401).json({ message: 'Authentication token is required', success: false });
+      return res
+        .status(401)
+        .json({ message: "Authentication token is required", success: false });
     }
-    console.log('token:', token);
+    console.log("token:", token);
     // Verify the token
     const secretKey = jwt.verify(token, process.env.JWT_SECRET);
 
-   const adminSecretKey = process.env.ADMIN_SECRET_KEY | "abhishek123";
+    const adminSecretKey = process.env.ADMIN_SECRET_KEY | "abhishek123";
 
     if (!adminSecretKey) {
-      throw new Error('Admin secret key not configured');
+      throw new Error("Admin secret key not configured");
     }
 
     if (secretKey !== adminSecretKey) {
       return res.status(401).json({
         success: false,
-        message: 'Unauthorized',
+        message: "Unauthorized",
       });
     }
-   console.log('token:', secretKey);
+    console.log("token:", secretKey);
 
     req.user = decoded.id || decoded._id; // Set user ID from token payload
 
     next();
   } catch (error) {
-    console.error('Authentication error:', error.message);
-    return res.status(401).json({ message: 'Invalid or expired token', success: false });
+    console.error("Authentication error:", error.message);
+    return res
+      .status(401)
+      .json({ message: "Invalid or expired token", success: false });
+  }
+};
+
+export const socketAuthenticator = async (err, socket, next) => {
+  try {
+    if (err) return next(err);
+    const authtoken = socket.req.cookies[CHATTU_TOKEN];
+    if (!authtoken)
+      return next(new Error("plz login to access this route ", 401));
+    const decodedData = jwt.verify(authtoken, process.env.JWT_SECRET);
+
+    let user = await UserModel.findById(decodedData._id)
+    if(!user){
+      return Error("no user Found")
+    }
+    socket.user = await UserModel.findById(decodedData._id);
+
+    return next();
+  } catch (error) {
+    console.log(error);
   }
 };

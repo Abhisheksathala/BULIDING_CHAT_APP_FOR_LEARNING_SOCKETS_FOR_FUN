@@ -10,14 +10,14 @@ import LayoutLoader from "./components/layout/Loader";
 // admin pages
 import AdminLogin from "./pages/admin/AdminLogin.jsx";
 import Dashboard from "./pages/admin/Dashboard.jsx";
-const ChatManagement = React.lazy(() =>
-  import("../src/pages/admin/ChatManagement.jsx")
+const ChatManagement = React.lazy(
+  () => import("../src/pages/admin/ChatManagement.jsx"),
 );
-const Usermanagement = React.lazy(() =>
-  import("../src/pages/admin/Usermanagement.jsx")
+const Usermanagement = React.lazy(
+  () => import("../src/pages/admin/Usermanagement.jsx"),
 );
-const Groupmanagement = React.lazy(() =>
-  import("../src/pages/admin/Groupmanagment.jsx")
+const Groupmanagement = React.lazy(
+  () => import("../src/pages/admin/Groupmanagment.jsx"),
 );
 const Message = React.lazy(() => import("../src/pages/admin/Message.jsx"));
 
@@ -33,15 +33,18 @@ import { server } from "./constants/config.js";
 import { useDispatch, useSelector } from "react-redux";
 import { userExist, userNotexist } from "./redux/reducers/auth.js";
 
+// context
+import SocketProvider from "./socket.jsx";
+
 const App = () => {
   const { user, loader } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   React.useEffect(() => {
     axios
-      .get(`${server}/api/v1/user/getuser`,{withCredentials:true})
-      .then(({data}) => {
-         dispatch(userExist(data.user))
+      .get(`${server}/api/v1/user/getuser`, { withCredentials: true })
+      .then(({ data }) => {
+        dispatch(userExist(data.user));
         console.log(data);
       })
       .catch(() => dispatch(userNotexist()));
@@ -59,7 +62,13 @@ const App = () => {
       >
         <Routes>
           {/*  */}
-          <Route element={<ProtectRoute user={user} />}>
+          <Route
+            element={
+              <SocketProvider>
+                <ProtectRoute user={user} />{" "}
+              </SocketProvider>
+            }
+          >
             <Route path="/" element={<Home />} />
             <Route path="/chat/:id" element={<Chat />} />
             <Route path="/groups" element={<Groups />} />
@@ -81,7 +90,7 @@ const App = () => {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
-      <Toaster position="top-center"/>
+      <Toaster position="top-center" />
     </>
   );
 };

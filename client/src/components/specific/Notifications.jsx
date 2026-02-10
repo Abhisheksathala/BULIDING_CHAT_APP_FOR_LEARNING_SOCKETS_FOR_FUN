@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setIsNotification } from "../../redux/reducers/misc";
 import { useAcceptFriendRequestMutation, useGetnotificationsQuery } from "../../redux/api/api";
 import { useErrors } from "../../hooks/hook";
+import toast from "react-hot-toast";
 
 const Notifications = () => {
  
@@ -49,8 +50,20 @@ const Notifications = () => {
 
   const { isNotification } = useSelector((state) => state.misc);
 
-  const FriendRequestHandler = ({ _id, accept }) => {
+  const FriendRequestHandler = async ({ _id, accept }) => {
+    // add friend reuest man 
+    dishpatch(setIsNotification(false))
+    try{
+       const res = await acceptRequest({requestId:_id,accept:accept})
+    if(res.data?.success){
+      console.log("user socketHere")
+      toast.success(res.data.message)
+    }else toast.error(res.data?.error || "somthing went wrong")
     console.log("Friend Request:", { _id, accept });
+    }catch(error){
+      console.log(error)
+      toast.error(error?.message|| "somthing went wrong")
+    }
   };
 
   const handlenotitifcationclose = () => {
