@@ -21,6 +21,8 @@ import { useErrors, useSocketEvents } from "../hooks/hook";
 //   name: "abhishek",
 // };
 
+// TODO : adding infiniti scroll 
+
 const Chat = ({ chatId, user }) => {
   const ContainerRef = React.useRef(null);
   const FilemenuRef = React.useRef(null);
@@ -31,6 +33,7 @@ const Chat = ({ chatId, user }) => {
   const [message, setMessage] = useState();
   const [messages, setMessages] = useState([]);
   const [page, setPage] = useState(1);
+  const [allMessages, setAllMessages] = useState([]);
 
   const { isLoading, error, data, isError } = useChatDetailsQuery({
     chatId,
@@ -82,6 +85,23 @@ const Chat = ({ chatId, user }) => {
   const allmessages = [...(oldmessagesData?.messages || []), ...messages];
 
   useErrors([errors]);
+
+  useEffect(() => {
+  const container = ContainerRef.current;
+  if (!container) return;
+
+  const handleScroll = () => {
+    if (container.scrollTop === 0 && !messagesLoading) {
+      if (page < (oldmessagesData?.totalpages || 1)) {
+        setPage(prev => prev + 1);
+      }
+    }
+  };
+
+  container.addEventListener("scroll", handleScroll);
+
+  return () => container.removeEventListener("scroll", handleScroll);
+}, [page, messagesLoading, oldmessagesData]);
 
   // useEffect(()=>{
   //   Object.entries(handlers).forEach((e)=>{})
