@@ -36,6 +36,10 @@ const AppLayout = (WrappedComponent) => {
       dispatch(setIsMobile(false));
     };
 
+    const {user} = useSelector((state)=>state.auth)
+
+   
+
     const socket = getSocket()
     console.log(socket.id)
 
@@ -72,6 +76,7 @@ const AppLayout = (WrappedComponent) => {
                 <ChatList
                   chats={data?.chats}
                   chatId={chatId}
+                  user={user}
                   newMessagesAlert={[
                     {
                       chatId: "1",
@@ -83,7 +88,7 @@ const AppLayout = (WrappedComponent) => {
               )}
             </div>
             <div className="w-full h-full">
-              <WrappedComponent {...props} chatId={chatId} socket={socket}/>
+              <WrappedComponent {...props} chatId={chatId} socket={socket}    user={user}/>
             </div>
             <div className=" h-screen w-full hidden md:block">
               <Profile  />

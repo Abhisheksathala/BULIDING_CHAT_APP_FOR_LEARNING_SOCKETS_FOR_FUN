@@ -11,6 +11,7 @@ import { getothermember } from "../helpers/Hpelerchat.js";
 import chatModel from "../models/chatModel.js";
 import UserModel from "../models/userModel.js";
 import messageModel from "../models/messageModel.js";
+import mongoose from "mongoose";
 // Utility to emit socket events and delete files from cloudinary
 import { emitEvent, deletfilesfromclodinary } from "../utils/features.js";
 
@@ -848,7 +849,7 @@ export const deletechatdetails = async (req, res) => {
  * TODO: this function ios now complted and fully functional bro
  */
 export const getmessages = async (req, res) => {
-  const { chatId } = req.params.id;
+  const { chatId } = req.params;
   const userId = req.user;
   try {
     const { page = 1 } = req.query;
@@ -871,7 +872,7 @@ export const getmessages = async (req, res) => {
 
     const totalpages = Math.ceil(totalmessagesCount / resulte_per_page) || 0;
 
-    return res.status(201).json({
+    return res.status(200).json({
       success: true,
       messages: message.reverse(),
       totalpages,

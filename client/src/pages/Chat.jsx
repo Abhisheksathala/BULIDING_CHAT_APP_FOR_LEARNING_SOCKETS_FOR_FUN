@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState, useMemo } from "react";
 import Applayout from "../components/layout/Applayout";
 import { Box, Stack, IconButton } from "@mui/material";
 import { grey } from "@mui/material/colors";
@@ -10,37 +10,90 @@ import { sampleMessages } from "../components/constants/sampleData";
 import MessageComponent from "../components/shared/MessageComponent";
 import { getSocket } from "../socket";
 import { NEW_MESSAGE } from "../components/constants/events";
-import { useChatDetailsQuery } from "../redux/api/api";
+import { useChatDetailsQuery, useGetMessagesQuery } from "../redux/api/api";
+import InfiniteScroll from 'react-infinite-scroller';
 
+// hook
+import { useErrors, useSocketEvents } from "../hooks/hook";
 
-const user = {
-  _id: "user_002",
-  name: "abhishek",
-};
+// const user = {
+//   _id: "user_002",
+//   name: "abhishek",
+// };
 
-const Chat = ({chatId}) => {
+const Chat = ({ chatId, user }) => {
   const ContainerRef = React.useRef(null);
   const FilemenuRef = React.useRef(null);
   const socket = getSocket();
 
-const {isLoading,error,data,isError} = useChatDetailsQuery({chatId,skip:!chatId})
- 
+  console.log("chatId:", chatId);
 
-  const [message, setMessages] = useState();
+  const [message, setMessage] = useState();
+  const [messages, setMessages] = useState([]);
+  const [page, setPage] = useState(1);
 
+  const { isLoading, error, data, isError } = useChatDetailsQuery({
+    chatId,
+    skip: !chatId,
+  });
 
-  const members = data?.chat?.members
+  const {
+    data: oldmessagesData,
+    error: messagesError,
+    isLoading: messagesLoading,
+    isError: messagesIsError,
+  } = useGetMessagesQuery({ chatId, page });
+
+  // console.log("oldmessagesData", oldmessagesData?.messages);
+
+  console.log("oldmessagesData", oldmessagesData);
+
+  const errors = [
+    { isError, error },
+    { messagesIsError, messagesError },
+  ];
+
+  const members = data?.chat?.members;
 
   const submitHandler = async (e) => {
     e.preventDefault();
     if (!message.trim()) return;
-    // Emitting message to the server 
-    socket.emit(NEW_MESSAGE, {chatId, members, message})
+    // Emitting message to the server
+    socket.emit(NEW_MESSAGE, { chatId, members, message });
     console.log(message);
-    setMessages("");
+    setMessage("");
   };
 
-  return isLoading ? "loading" : (
+  const newmessagesHanlder = useCallback((data) => {
+    console.log(data);
+    if (!data?.message) return;
+    setMessages((prev) => [...prev, data.message]);
+  }, []);
+
+  const eventeArr = useMemo(
+    () => ({
+      [NEW_MESSAGE]: newmessagesHanlder,
+    }),
+    [newmessagesHanlder],
+  );
+
+  useSocketEvents(socket, eventeArr);
+
+  const allmessages = [...(oldmessagesData?.messages || []), ...messages];
+
+  useErrors([errors]);
+
+  // useEffect(()=>{
+  //   Object.entries(handlers).forEach((e)=>{})
+  //     socket.on(NEW_MESSAGE,(data)=>{console.log(data)})
+  //     return ()=>{
+  //       socket.off(NEW_MESSAGE,func_newmessagesHanlder)
+  //     }
+  // },[])
+
+  return isLoading ? (
+    "loading"
+  ) : (
     <Stack
       className="relative"
       height="100%"
@@ -63,7 +116,7 @@ const {isLoading,error,data,isError} = useChatDetailsQuery({chatId,skip:!chatId}
         ref={ContainerRef}
       >
         {/* message render */}
-        {sampleMessages.map((item, index) => (
+        {allmessages.map((item, index) => (
           <>
             <MessageComponent key={index} message={item} user={user} />
           </>
@@ -91,7 +144,7 @@ const {isLoading,error,data,isError} = useChatDetailsQuery({chatId,skip:!chatId}
               height={"2rem"}
               placeholder="Type a message…"
               onChange={(e) => {
-                setMessages(e.target.value);
+                setMessage(e.target.value);
               }}
             />
           </Box>
@@ -116,4 +169,4 @@ const {isLoading,error,data,isError} = useChatDetailsQuery({chatId,skip:!chatId}
 
 export default Applayout(Chat);
 
-// 
+//

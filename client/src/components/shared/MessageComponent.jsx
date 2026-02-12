@@ -8,6 +8,9 @@ import { Box } from '@mui/material';
 const MessageComponent = ({ message, user }) => {
   const { sender, content, attachments = [], createdAt } = message;
 
+  // console.log(message)
+
+
   const samesender = sender?._id === user?._id;
 
   const timeAgo = moment(createdAt).fromNow();

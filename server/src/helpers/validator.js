@@ -57,7 +57,7 @@ export const Sendattachments = () => [
 ];
 
 export const getmessagevalidater = () => [
-  param("id", "Plase enter chatId").notEmpty(),
+  param("chatId", "Plase enter chatId").notEmpty(),
   query("page", "plase sned the page number").notEmpty(),
 ];
 
